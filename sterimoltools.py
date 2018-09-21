@@ -12,7 +12,7 @@
 #Python Libraries
 import subprocess, sys, os
 from numpy import *
-from scipy import *
+#from scipy import *
 from math import *
 import numpy as np
 #from vpython import *
