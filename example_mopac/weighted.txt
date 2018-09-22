@@ -1,0 +1,167 @@
+*******************************************************************************
+** For non-commercial use only                                  Version 1.03 **
+*******************************************************************************
+** Cite this program as:  to be determined                                   **
+** Paton Computational Chemistry Group,   web: http://paton.chem.ox.ac.uk    **
+*******************************************************************************
+**                                                                           **
+**                    W E I G H T E D   S T E R I M O L                      **
+**                                                                           **
+*******************************************************************************
+* CALCULATION WITH MOPAC                                                      *
+* MOPAC EXECUTIVE PATH: /opt/mopac/MOPAC2016.exe                              *
+* using force-field: PM6-D3H4                                                 *
+* PM6-D3H4 charge=0                                                           *
+*******************************************************************************
+* Clusterisation cut-off was set at: 0.30 Angstroms                           *
+* Angle count: 5        | Atomic model: cpk        | Temperature:  298 K      *
+* Print cut-off:   5.0 kcal/mol                                               *
+* Energy window cut-off #0 : 1.0 kcal/mol                                     *
+* Energy window cut-off #1 : 3.0 kcal/mol                                     *
+* Energy window cut-off #2 : 5.0 kcal/mol                                     *
+*******************************************************************************
+ File created on 2018-09-21 | A for Angstroms
+
+ Structures                   E (kcal/mol)  L1 (A)  B1 (A)  B5 (A)    (%)
+ pentane_20.out                       1.40    5.39    1.90    4.43   2.88
+ pentane_21.out                       1.89    5.27    1.89    4.51   1.28
+ pentane_22.out                       0.61    6.49    1.67    3.67  11.03
+ pentane_7.out                        0.58    6.57    1.69    3.77  11.55
+ pentane_6.out                        1.25    5.57    1.87    4.41   3.72
+ pentane_4.out                        1.24    5.81    1.89    4.25   3.81
+ pentane_9.out                        1.86    5.70    1.92    4.47   1.33
+ pentane_13.out                       0.00    7.38    1.70    2.78  30.52
+ pentane_15.out                       0.58    6.40    1.89    4.04  11.51
+ pentane_14.out                       0.63    6.39    1.91    3.92  10.60
+ pentane_16.out                       0.57    6.44    1.91    3.95  11.77
+
+*******************************************************************************
+**                                                                           **
+**                        wL (A)   wB1 (A)   wB5 (A)                         **
+**                          6.63      1.79      3.60                         **
+**                                                                           **
+*******************************************************************************
+
+
+*******************************************************************************
+* Energy window cut-off #0 : 1.0 kcal/mol                                     *
+*                                                                             *
+*        Lmin (A)  Lmax (A)  B1min (A)  B1max (A)  B5min (A)  B5max (A)       *
+*            6.39      7.38       1.67       1.91       2.78       4.04       *
+*                                                                             *
+*******************************************************************************
+ List of the selected conformers accounting for 86.979% of the conformers:
+ Structures                   E (kcal/mol)  L1 (A)  B1 (A)  B5 (A)    (%)
+ pentane_22.out                       0.61    6.49    1.67    3.67  11.03
+ pentane_7.out                        0.58    6.57    1.69    3.77  11.55
+ pentane_13.out                       0.00    7.38    1.70    2.78  30.52
+ pentane_15.out                       0.58    6.40    1.89    4.04  11.51
+ pentane_14.out                       0.63    6.39    1.91    3.92  10.60
+ pentane_16.out                       0.57    6.44    1.91    3.95  11.77
+
+*******************************************************************************
+* Energy window cut-off #1 : 3.0 kcal/mol                                     *
+*                                                                             *
+*        Lmin (A)  Lmax (A)  B1min (A)  B1max (A)  B5min (A)  B5max (A)       *
+*            5.27      7.38       1.67       1.92       2.78       4.51       *
+*                                                                             *
+*******************************************************************************
+ List of the selected conformers accounting for 99.997% of the conformers:
+ Structures                   E (kcal/mol)  L1 (A)  B1 (A)  B5 (A)    (%)
+ pentane_20.out                       1.40    5.39    1.90    4.43   2.88
+ pentane_21.out                       1.89    5.27    1.89    4.51   1.28
+ pentane_22.out                       0.61    6.49    1.67    3.67  11.03
+ pentane_7.out                        0.58    6.57    1.69    3.77  11.55
+ pentane_6.out                        1.25    5.57    1.87    4.41   3.72
+ pentane_4.out                        1.24    5.81    1.89    4.25   3.81
+ pentane_9.out                        1.86    5.70    1.92    4.47   1.33
+ pentane_13.out                       0.00    7.38    1.70    2.78  30.52
+ pentane_15.out                       0.58    6.40    1.89    4.04  11.51
+ pentane_14.out                       0.63    6.39    1.91    3.92  10.60
+ pentane_16.out                       0.57    6.44    1.91    3.95  11.77
+
+*******************************************************************************
+* Energy window cut-off #2 : 5.0 kcal/mol                                     *
+*                                                                             *
+*        Lmin (A)  Lmax (A)  B1min (A)  B1max (A)  B5min (A)  B5max (A)       *
+*            5.27      7.38       1.67       1.92       2.78       4.51       *
+*                                                                             *
+*******************************************************************************
+ List of the selected conformers accounting for 99.997% of the conformers:
+ Structures                   E (kcal/mol)  L1 (A)  B1 (A)  B5 (A)    (%)
+ pentane_20.out                       1.40    5.39    1.90    4.43   2.88
+ pentane_21.out                       1.89    5.27    1.89    4.51   1.28
+ pentane_22.out                       0.61    6.49    1.67    3.67  11.03
+ pentane_7.out                        0.58    6.57    1.69    3.77  11.55
+ pentane_6.out                        1.25    5.57    1.87    4.41   3.72
+ pentane_4.out                        1.24    5.81    1.89    4.25   3.81
+ pentane_9.out                        1.86    5.70    1.92    4.47   1.33
+ pentane_13.out                       0.00    7.38    1.70    2.78  30.52
+ pentane_15.out                       0.58    6.40    1.89    4.04  11.51
+ pentane_14.out                       0.63    6.39    1.91    3.92  10.60
+ pentane_16.out                       0.57    6.44    1.91    3.95  11.77
+
+                         COPY OF DATA FOR ARCHIVES
+
+*******************************************************************************
+** For non-commercial use only                                  Version 1.03 **
+*******************************************************************************
+** Cite this program as:  to be determined                                   **
+** Paton Computational Chemistry Group,   web: http://paton.chem.ox.ac.uk    **
+*******************************************************************************
+**                                                                           **
+**                             E N E R G I E S                               **
+**                                                                           **
+*******************************************************************************
+* CALCULATION WITH MOPAC                                                      *
+* MOPAC EXECUTIVE PATH: /opt/mopac/MOPAC2016.exe                              *
+* using force-field: PM6-D3H4                                                 *
+* PM6-D3H4 charge=0                                                           *
+* Clusterisation cut-off was set at: 0.30 Angstroms                           *
+* Angle count: 5        | Atomic model: cpk        | Temperature:  298 K      *
+*******************************************************************************
+ File created on 2018-09-21
+
+ Structure                       Etot (Hartree)
+ pentane_20.out                   -28.530881
+ pentane_21.out                   -28.530110
+ pentane_22.out                   -28.532161
+ pentane_1.out                    -28.524448
+ pentane_7.out                    -28.532205
+ pentane_6.out                    -28.531125
+ pentane_4.out                    -28.531147
+ pentane_9.out                    -28.530149
+ pentane_13.out                   -28.533131
+ pentane_15.out                   -28.532202
+ pentane_14.out                   -28.532123
+ pentane_16.out                   -28.532223
+
+*******************************************************************************
+** For non-commercial use only                                  Version 1.03 **
+*******************************************************************************
+** Cite this program as:  to be determined                                   **
+** Paton Computational Chemistry Group,   web: http://paton.chem.ox.ac.uk    **
+*******************************************************************************
+**                                                                           **
+**                             S T E R I M O L                               **
+**                                                                           **
+*******************************************************************************
+* sterimol -a1 1   -a2 3   -radii cpk                                         *
+* Clusterisation cut-off was set at: 0.30 Angstroms                           *
+* Angle count: 5        | Atomic model: cpk        | Temperature:  298 K      *
+*******************************************************************************
+ File created on 2018-09-21 | A for Angstroms
+
+ Structure                          L1 (A)   B1 (A)   B5 (A) 
+ pentane_20.out                       5.39     1.90     4.43
+ pentane_21.out                       5.27     1.89     4.51
+ pentane_22.out                       6.49     1.67     3.67
+ pentane_1.out                        5.40     1.85     4.56
+ pentane_7.out                        6.57     1.69     3.77
+ pentane_6.out                        5.57     1.87     4.41
+ pentane_4.out                        5.81     1.89     4.25
+ pentane_9.out                        5.70     1.92     4.47
+ pentane_13.out                       7.38     1.70     2.78
+ pentane_15.out                       6.40     1.89     4.04
+ pentane_14.out                       6.39     1.91     3.92
+ pentane_16.out                       6.44     1.91     3.95

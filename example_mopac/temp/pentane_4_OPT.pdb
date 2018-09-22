@@ -1,0 +1,19 @@
+REMARK   1 File created by energy.py
+HETATM    1  C           0       0.403  -0.648   0.072                       C
+HETATM    2  C           0       0.871   0.758  -0.317                       C
+HETATM    3  C           0       1.506   1.531   0.853                       C
+HETATM    4  C           0       0.485   2.167   1.812                       C
+HETATM    5  C           0      -0.189   3.420   1.244                       C
+HETATM    6  H           0       0.002  -1.171  -0.824                       H
+HETATM    7  H           0       1.253  -1.239   0.481                       H
+HETATM    8  H           0      -0.396  -0.590   0.842                       H
+HETATM    9  H           0      -0.828   3.887   2.026                       H
+HETATM   10  H           0       0.001   1.335  -0.711                       H
+HETATM   11  H           0       1.629   0.667  -1.132                       H
+HETATM   12  H           0       2.159   2.335   0.436                       H
+HETATM   13  H           0       2.148   0.830   1.439                       H
+HETATM   14  H           0       1.016   2.446   2.755                       H
+HETATM   15  H           0      -0.299   1.414   2.064                       H
+HETATM   16  H           0      -0.828   3.158   0.372                       H
+HETATM   17  H           0       0.576   4.157   0.916                       H
+END
