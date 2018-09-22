@@ -1,6 +1,7 @@
 #!/usr/bin/python
+from __future__ import print_function, absolute_import
 
-import subprocess, sys, os, math, datetime, shutil, getpass
+import subprocess, sys, os, math, datetime, shutil
 
 from pymol import cmd
 
@@ -24,8 +25,8 @@ def AddConformers(path = "temp"):
                     if filesplit[-1] == "pdb": # only pdb is accepted here
                         cmd.load(os.path.join(path, file_name)) #load the structures
                         BallnStick( filesplit[0] ) # make it look pretty
-        else: print "Error: No files to load in directory [%s]" % path
-    else: print "Error: The path doesn't exist [%s]" % path
+        else: print("Error: No files to load in directory [%s]" % path)
+    else: print("Error: The path doesn't exist [%s]" % path)
 
 cmd.extend("AddConformers", AddConformers)
 
@@ -53,7 +54,7 @@ bondi_radii = [0.0,1.09, 1.40, 1.82,2.00,2.00,1.70,1.55,1.52,1.47,1.54,2.27,1.73
 #Some useful arrays for chemists
 periodictable = ["","H","He","Li","Be","B","C","N","O","F","Ne","Na","Mg","Al","Si","P","S","Cl","Ar","K","Ca","Sc","Ti","V","Cr","Mn","Fe","Co","Ni","Cu","Zn","Ga","Ge","As","Se","Br","Kr","Rb","Sr","Y","Zr", "Nb","Mo","Tc","Ru","Rh","Pd","Ag","Cd","In","Sn","Sb","Te","I","Xe","Cs","Ba","La","Ce","Pr","Nd","Pm","Sm","Eu","Gd","Tb","Dy","Ho","Er","Tm","Yb","Lu","Hf","Ta","W","Re","Os","Ir","Pt","Au","Hg","Tl", "Pb","Bi","Po","At","Rn","Fr","Ra","Ac","Th","Pa","U","Np","Pu","Am","Cm","Bk","Cf","Es","Fm","Md","No","Lr","Rf","Db","Sg","Bh","Hs","Mt","Ds","Rg","Uub","Uut","Uuq","Uup","Uuh","Uus","Uuo","Bq"]
 
-    
+
 def atomicModelRadius(ATOMTYPES, CARTESIANS , radii, atomid):
     if radii == "cpk": # CPK needs to know the "atomtype", and the atomtype is defined according to the atom environment... Not very efficient
         atomic_co_no = ncoord_atom(atomid, ATOMTYPES, CARTESIANS)
@@ -129,12 +130,12 @@ elements = ["H","He","Li","Be","B","C","N","O","F","Ne","Na","Mg","Al","Si",
         "Rn","Fr","Ra","Ac","Th","Pa","U","Np","Pu","Am","Cm","Bk","Cf","Es","Fm",
         "Md","No","Lr","Rf","Db","Sg","Bh","Hs","Mt","Ds","Rg","Uub","Uut","Uuq",
         "Uup","Uuh","Uus","Uuo"]
-    
+
 def atomicnumber(element):
     for i in range(1,len(periodictable)):
         if element == periodictable[i]: return i
-    
-   
+
+
 def BallnStick( arg1 ):
     cmd.show("sticks", arg1)
     cmd.show("spheres", arg1)
@@ -146,6 +147,7 @@ def BallnStick( arg1 ):
     cmd.set("dash_gap",0.01, arg1)
     cmd.hide("nonbonded", arg1)
     cmd.hide("lines", arg1)
+    cmd.label('all', 'ID')
 
 cmd.extend( "BallnStick", BallnStick );
 
@@ -170,7 +172,7 @@ def Add_VDW( object, radii = ""):
     cmd.hide("lines", object+"_vdw")
     cmd.hide("sticks", object+"_vdw")
     cmd.set("sphere_transparency", 0.7, object+"_vdw")
- 
+
 cmd.extend( "Add_VDW", Add_VDW );
 
 # Setup a nice environment for the Paton group images
@@ -185,9 +187,3 @@ cmd.set("antialias", 1)
 cmd.set("orthoscopic", 0)
 cmd.set("field_of_view", 30)
 cmd.set("transparency", 0.5)
-
-
-
-
-
-

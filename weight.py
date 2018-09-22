@@ -1,5 +1,6 @@
 #!/usr/bin/python
-import subprocess, sys, os, math, datetime, shutil, getpass
+from __future__ import print_function, absolute_import
+import subprocess, sys, os, math, datetime, shutil
 from os.path import isfile, join
 
 from pymol import cmd
@@ -17,8 +18,8 @@ def weight(setup_path = "default", verbose = "False"):
     # If files exist
     if os.path.exists("energies.txt") and os.path.exists("Sterimol.txt"):
         log_path = "log-%s" % (datetime.date.today())
-        if os.path.exists(log_path+".pylog"): 
-            print "Warning: Continuing previous log file [%s.pylog]" % log_path
+        if os.path.exists(log_path+".pylog"):
+            print("Warning: Continuing previous log file [%s.pylog]" % log_path)
         log = Log(log_path,"pylog")
         log.write("\n\n########################################\n###########   W E I G H T   ############\n########################################\n\n")
         #verbose
@@ -31,19 +32,19 @@ def weight(setup_path = "default", verbose = "False"):
             filenames_val = []
             energies_val = []
             sterimol_val = []
-            # Retrieve energies 
+            # Retrieve energies
             outenergy = open("energies.txt","r")
             outlinesenergy = outenergy.readlines()
             outenergy.close()
             start = -1
             for i in range(0,len(outlinesenergy)):
-                if outlinesenergy[i].find("Structure") > -1: 
+                if outlinesenergy[i].find("Structure") > -1:
                     start = i+1
                     break
             if start >= 0:
                 for i in range(start,len(outlinesenergy)):
                     split = outlinesenergy[i].split()
-                    if len(split) >= 2: 
+                    if len(split) >= 2:
                         if is_str(split[0]):
                             if try_number(split[1]):
                                 filenames_val.append(str(split[0]))
@@ -59,13 +60,13 @@ def weight(setup_path = "default", verbose = "False"):
                     outsterimol.close()
                     start = -1
                     for i in range(0,len(outlinessterimol)):
-                        if outlinessterimol[i].find("Structure") > -1: 
+                        if outlinessterimol[i].find("Structure") > -1:
                             start = i+1
                             break
                     if start >= 0:
                         for i in range(start,len(outlinessterimol)):
                             split = outlinessterimol[i].split()
-                            if len(split) >= 4: 
+                            if len(split) >= 4:
                                 if is_str(split[0]):
                                     if try_number(split[1]) and try_number(split[2]) and try_number(split[3]):
                                         for j in range(len(filenames_val)):
@@ -104,23 +105,29 @@ def weight(setup_path = "default", verbose = "False"):
                     output.write("*******************************************************************************\n")
                     output.write("** For non-commercial use only                                  Version %.2f **\n" % version)
                     output.write("*******************************************************************************\n")
-                    output.write("** Cite this program as:  to be determined                                   **\n")
-                    output.write("** Paton Computational Chemistry Group,   web: http://paton.chem.ox.ac.uk    **\n")
+                    output.write("** Developed by:                                                             **\n")
+                    output.write("** Alex Brethome - University of Oxford                                      **\n")
+                    output.write("** Robert Paton - Colorado State University (patonlab.com)                   **\n")
+                    output.write("** If you use wSterimol, please acknowledge: Brethome, A.; Fletcher, S. P.;  **\n")
+                    output.write("** Paton, R. S. submitted 2018                                               **\n")
                     output.write("*******************************************************************************\n")
-                    output.write("**                                                                           **\n")
+                    output.write("**                   ____ ______ ____ ___   ____ __  ___ ____   __           **\n")
+                    output.write("**          _    __ / __//_  __// __// _ \ /  _//  |/  // __ \ / /           **\n")
+                    output.write("**         | |/|/ /_\ \   / /  / _/ / , _/_/ / / /|_/ // /_/ // /__          **\n")
+                    output.write("**         |__,__//___/  /_/  /___//_/|_|/___//_/  /_/ \____//____/          **\n")
+
                     output.write("**                    W E I G H T E D   S T E R I M O L                      **\n")
-                    output.write("**                                                                           **\n")
                     output.write("*******************************************************************************\n")
                     output.write("* CALCULATION WITH %-30s                             *\n" % setup.software)
-                    if setup.software == "MOPAC": 
+                    if setup.software == "MOPAC":
                         output.write("* MOPAC EXECUTIVE PATH: %-53s *\n" % setup.exe)
                         output.write("* using force-field: %-56s *\n" % setup.SE)
                         keywords = "%s charge=%s %s" % (setup.SE, setup.charge, setup.scf)
                         output.write("* %-75s *\n" % keywords)
-                    elif setup.software == "GAUSSIAN": 
+                    elif setup.software == "GAUSSIAN":
                         output.write("* %%mem=%2.fGB                                                                   *\n" % setup.memories )
                         output.write("* %%nprocshared=%2.f                                                             *\n" % setup.procsshared)
-                        output.write("* # opt=(maxcycles=160) freq=noraman %-40s *\n" % setup.leveloftheory) 
+                        output.write("* # opt=(maxcycles=160) freq=noraman %-40s *\n" % setup.leveloftheory)
                         output.write("* %2.f %2.f                                                                       *\n" % (setup.charge, setup.spin))
                         if setup.singlepointcalculation != "":
                             output.write("* --Link1--                                                                   *\n")
@@ -210,9 +217,9 @@ def weight(setup_path = "default", verbose = "False"):
                     log.finalize()
             else: log.write("Error: No data was retrieved for the weighted sterimol. Exit.")
         else: log.write("Error: Failed to load setup.ini in [%s]. Fix it to continue." % setup_path)
-    else: print "FATAL ERROR: Files containing energies and Sterimol values don't exist"
-        
-   
+    else: print("FATAL ERROR: Files containing energies and Sterimol values don't exist")
+
+
 cmd.extend("weight",weight)
 
 

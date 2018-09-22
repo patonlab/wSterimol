@@ -10,11 +10,11 @@ from pymol import cmd
 # run wSterimol.py
 # wSterimol dihedrals, atomid1, atomid2, (radii, walltime, directory, setup_path, verbose, force)
 
-def wSterimol(dihedrals, atomid1 = 1, atomid2 = 2, directory = "temp", setup_path = "default", walltime = 300,  verbose = "False", force = False):
+def wSterimol(dihedrals, atomid1 = 1, atomid2 = 2, directory = "temp", setup_path = '.', walltime = 300,  verbose = "False", force = False):
     # Log generation
     log_path = "log-%s" % (datetime.date.today())
-    if os.path.exists(log_path+".pylog"): 
-        print "Warning: Continuing previous log file [%s.pylog]" % log_path
+    if os.path.exists(log_path+".pylog"):
+        print("Warning: Continuing previous log file [%s.pylog]" % log_path)
     wlog = Log(log_path,"pylog")
     # Do weighted Sterimol
     generate(dihedrals, directory, setup_path, verbose, force)

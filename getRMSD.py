@@ -1,8 +1,9 @@
 #!/usr/bin/python
-import subprocess, sys, os, math, datetime, shutil, getpass, datetime
+from __future__ import print_function, absolute_import
+import subprocess, sys, os, math, datetime, shutil, datetime
 from os import listdir
 from os.path import isfile, join
-from subprocess import Popen, PIPE
+from subprocess import PIPE
 
 from pymol import cmd
 #run ../../../..\code\getRMSD.py
@@ -32,7 +33,7 @@ def getRMSD(directory = "temp"):
         min_energy = min(energies)
         for i in range(len(energies)):
             energies[i] = (energies[i] - min_energy) * hartree_to_Jmol*Jmol_to_kcalmol
-        #write csv 
+        #write csv
         output = open("RMSD.csv", 'w' )
         output.write("Structure;Energy;RMSD\n")
         message = "%s;%.4f;%.4f\n" % (files[0], energies[0], 0) # RMSD = -1 for the same structure by default, but in our case 0 is more meningful
@@ -42,6 +43,6 @@ def getRMSD(directory = "temp"):
             output.write(message)
         # terminate
         output.close()
-    else: print "FATAL ERROR: Specified directory doesn't exist [%s]" % directory
-        
+    else: print("FATAL ERROR: Specified directory doesn't exist [%s]" % directory)
+
 cmd.extend("getRMSD",getRMSD)

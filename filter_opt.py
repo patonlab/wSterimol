@@ -1,8 +1,9 @@
 #!/usr/bin/python
-import subprocess, sys, os, math, datetime, shutil, getpass, datetime
+from __future__ import print_function, absolute_import
+import subprocess, sys, os, math, datetime, shutil, datetime
 from os import listdir
 from os.path import isfile, join
-from subprocess import Popen, PIPE
+from subprocess import PIPE
 
 from pymol import cmd
 
@@ -17,15 +18,15 @@ from pymol import cmd
 # run setup.py
 # run filter_opt.py
 # filter_opt (directory, verbose, setup_path)
-# example: 
+# example:
 
 def filter_opt(directory = "temp", setup_path = "default", verbose = "False"):
     # If the directory exists
     if os.path.exists(directory):
         # Log generation
         log_path = "log-%s" % (datetime.date.today())
-        if os.path.exists(log_path+".pylog"): 
-            print "Warning: Continuing previous log file [%s.pylog]" % log_path
+        if os.path.exists(log_path+".pylog"):
+            print("Warning: Continuing previous log file [%s.pylog]" % log_path)
         log = Log(log_path,"pylog")
         log.write("\n\n########################################\n########### F I L T E R - O ############\n########################################\n\n")
         #verbose
@@ -47,7 +48,7 @@ def filter_opt(directory = "temp", setup_path = "default", verbose = "False"):
                     for i in range(len(files)):
                         fileData = getoutData(join(directory, files[i]))
                         #there is an energy, there was no error
-                        if hasattr(fileData, "ENERGY"): 
+                        if hasattr(fileData, "ENERGY"):
                             export_pdb(directory, files[i], fileData)
                             energies.append(fileData.ENERGY) # hartree
                         else: #error: the optimisation probably failed for this conformer, we remove it and trigger a warning
@@ -76,10 +77,10 @@ def filter_opt(directory = "temp", setup_path = "default", verbose = "False"):
                                     min_id = j
                                     min_rmsd = current_rmsd
                         # check results, and do accordingly
-                        if min_id == -1: 
+                        if min_id == -1:
                             bins.append([i]) # doesn't belong to a bin, create a new bin
                             log.write("Create a new bin (#%s) for [%s]" % ((len(bins)-1), files[i]), verbose)
-                        else: 
+                        else:
                             bins[min_id].append(i) #belongs to bin[min_id]
                             log.write("[%s] Added to bin #%s  with RMSD of %-6.4f Angstroms" % (files[i], min_id, min_rmsd), verbose)
                     #finally, filter by keeping one structure for each bin
@@ -127,15 +128,15 @@ def filter_opt(directory = "temp", setup_path = "default", verbose = "False"):
                 output.write("**                                                                           **\n")
                 output.write("*******************************************************************************\n")
                 output.write("* CALCULATION WITH %-30s                             *\n" % setup.software)
-                if setup.software == "MOPAC": 
+                if setup.software == "MOPAC":
                     output.write("* MOPAC EXECUTIVE PATH: %-53s *\n" % setup.exe)
                     output.write("* using force-field: %-56s *\n" % setup.SE)
                     keywords = "%s charge=%s %s" % (setup.SE, setup.charge, setup.scf)
                     output.write("* %-75s *\n" % keywords)
-                elif setup.software == "GAUSSIAN": 
+                elif setup.software == "GAUSSIAN":
                     output.write("* %%mem=%2.fGB                                                                   *\n" % setup.memories )
                     output.write("* %%nprocshared=%2.f                                                             *\n" % setup.procsshared)
-                    output.write("* # opt=(maxcycles=160) freq=noraman %-40s *\n" % setup.leveloftheory) 
+                    output.write("* # opt=(maxcycles=160) freq=noraman %-40s *\n" % setup.leveloftheory)
                     output.write("* %2.f %2.f                                                                       *\n" % (setup.charge, setup.spin))
                     if setup.singlepointcalculation != "":
                         output.write("* --Link1--                                                                   *\n")
@@ -158,15 +159,15 @@ def filter_opt(directory = "temp", setup_path = "default", verbose = "False"):
             else:
                 log.write("Error: Failed to load setup.ini in [%s]. Fix it to continue." % setup_path)
         else: log.write("Error: No file to use in the directory [%s]" % directory)
-    else: print "FATAL ERROR: Specified directory doesn't exist [%s]" % directory
-        
+    else: print("FATAL ERROR: Specified directory doesn't exist [%s]" % directory)
+
 cmd.extend("filter_opt",filter_opt)
 
 # If .out files already exist, then we remove them to avoid conflict problems later.
 def export_pdb(directory, file, Molspec):
     filesplit = file.split(".")
     full_file_name = join(directory, "%s_OPT.pdb" % filesplit[0])
-    if os.path.exists(full_file_name): 
+    if os.path.exists(full_file_name):
         os.remove(full_file_name)  # remove file
     file = open(full_file_name, 'w' )
     file.write("REMARK   1 File created by energy.py\n")
@@ -175,4 +176,3 @@ def export_pdb(directory, file, Molspec):
         file.write(message)
     file.write("END\n")
     file.close()
-        

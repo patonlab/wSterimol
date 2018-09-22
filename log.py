@@ -1,4 +1,5 @@
 #!/usr/bin/python
+from __future__ import print_function, absolute_import
 
 import sys, os
 import timeit
@@ -12,30 +13,25 @@ class Log:
         # Create the log file at the input path
         self.start_time = timeit.default_timer()
         self.log = open(filein+"."+suffix, 'a+' )
-    
+
     # Write a message to the log and the terminal by default
     def write(self, message, verbose = True):
         # Print the message
-        if verbose: print message # versatile, depend on the called function
+        if verbose: print(message) # versatile, depend on the called function
         # Write to log
         self.log.write(message + "\n")
-    
-    # Write a message only to the log and not to the terminal
-    def writeOnlyFile(self, message):
-        # Write to log
-        self.log.write(message)
-    
+
     # Write a fatal error, finalize and terminate the program
     def fatal(self, message):
         # Print the message
-        print message+"\n"
+        print(message+"\n")
         # Write to log
         self.log.write(message + "\n")
         # Finalize the log
         self.finalize()
         # End the program
         sys.exit(1)
-    
+
     # Finalize the log file
     def finalize(self):
         self.end_time = timeit.default_timer()

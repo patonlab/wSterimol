@@ -1,4 +1,5 @@
 #!/usr/bin/python
+from __future__ import print_function, absolute_import
 
 
 ###Sterimol (and Tolman CA) Calculator###
@@ -30,40 +31,11 @@ periodictable = ["Bq","H","He","Li","Be","B","C","N","O","F","Ne","Na","Mg","Al"
              "Nb","Mo","Tc","Ru","Rh","Pd","Ag","Cd","In","Sn","Sb","Te","I","Xe","Cs","Ba","La","Ce","Pr","Nd","Pm","Sm","Eu","Gd","Tb","Dy","Ho","Er","Tm","Yb","Lu","Hf","Ta","W","Re","Os","Ir","Pt","Au","Hg","Tl",
              "Pb","Bi","Po","At","Rn","Fr","Ra","Ac","Th","Pa","U","Np","Pu","Am","Cm","Bk","Cf","Es","Fm","Md","No","Lr","Rf","Db","Sg","Bh","Hs","Mt","Ds","Rg","Uub","Uut","Uuq","Uup","Uuh","Uus","Uuo"]
 
-metals = ["Li","Be","Na","Mg","Al","K","Ca","Sc","Ti","V","Cr","Mn","Fe","Co","Ni","Cu","Zn","Ga","Rb","Sr","Y","Zr","Nb","Mo","Tc","Ru","Rh","Pd","Ag","Cd","In","Sn","Cs","Ba","La","Ce","Pr","Nd","Pm","Sm","Eu","Gd","Tb","Dy","Ho","Er","Tm","Yb","Lu","Hf","Ta","W","Re","Os","Ir","Pt","Au","Hg","Tl","Pb","Bi","Po","Fr","Ra","Ac","Th","Pa","U","Np","Pu","Am","Cm","Bk","Cf","Es","Fm","Md","No","Lr","Rf","Db","Sg","Bh","Hs","Mt","Ds","Rg","Cn","Uut","Fl","Uup","Lv"]
-
 # Verloop's original Sterimol parameters use CPK atomic VdW radii based on atom-type definitions
 sterimol_atomtypes = ["C", "C2", "C3", "C4", "C5/N5", "C6/N6", "C7", "C8", "H", "N", "C66", "N4", "O", "O2", "P", "S", "S1", "F", "C1", "S4", "B1", "I"]
 
 # CPK VdW radii in pm
 cpk_radii = [150,160,160,150,170,170,170,150,100,150,170,145,135,135,140,170,100,135,180,140,195,215]
-
-def getfragment(atom,molcart):
-   bondlist=[atom]
-   for a in range(len(molcart)):
-      if calcdist(atom,a,molcart)<1.92 and a not in bondlist:bondlist.append(a)
-
-      for b in range(len(bondlist)):
-         for c in range(len(molcart)):
-
-            if calcdist(bondlist[b],c,molcart)<1.92 and c not in bondlist:bondlist.append(c)
-   return bondlist
-
-def connectivity(atom,molcart,aty):
-   con=[]
-   for a in range(len(molcart)):
-      if aty[a]in metals and molcart[a] != molcart[atom] and 0.1<calcdist(a,atom,molcart)<2:con.append(a)
-      if molcart[a] != molcart[atom] and 0.1<calcdist(a,atom,molcart)<1.7:con.append(a)
-   return len(con)
-def genradii(atom,molcart,aty):
-   #molcart=fileData.CARTESIANS
-   con=connectivity(atom,molcart,aty)
-   if con==0:con=1
-   type=aty[atom]
-   arow=periodictable.index(type)
-   radius=molmod[arow][con]
-   if radius==0:radius=1;print "Warning: No atomic radii found", arow, con
-   return radius
 
 def rotrel(vect1,vect2,vect3):
    ax=np.cross(vect1,vect2)
@@ -120,30 +92,6 @@ def getcoords(atom,molcart):
       coords.append(molcart[atom][i])
    return coords
 
-def avpoints(atomnos,molcart):
-   xcoords=[]
-   ycoords=[]
-   zcoords=[]
-   for a in atomnos:
-      xcoords.append(molcart[a][0])
-      ycoords.append(molcart[a][1])
-      zcoords.append(molcart[a][2])
-   syslength=len(xcoords)
-   x=0;y=0;z=0
-   for i in range(syslength):
-      x=x+xcoords[i]
-      y=y+ycoords[i]
-      z=z+zcoords[i]
-   x=x/syslength; y=y/syslength; z=z/syslength
-   return round(x,8),round(y,8),round(z,8)
-
-def distcalc(atom1,atom2):
-   x=atom1[0]-atom2[0]
-   y=atom1[1]-atom2[1]
-   z=atom1[2]-atom2[2]
-   dist = (x**2+y**2+z**2)**0.5
-   return dist
-
 def dprod(v1, v2): return sum((a*b) for a, b in zip(v1, v2))
 
 def length(v): return math.sqrt(dprod(v, v))
@@ -154,35 +102,6 @@ def angle(v1, v2):
    if val < -0.999999: val = -1.0
    return math.acos(val)
 
-def dihedral(atoma,atomb,atomc,atomd):
-   x1=atoma[0]
-   y1=atoma[1]
-   z1=atoma[2]
-   x2=atomb[0]
-   y2=atomb[1]
-   z2=atomb[2]
-   x3=atomc[0]
-   y3=atomc[1]
-   z3=atomc[2]
-   x4=atomd[0]
-   y4=atomd[1]
-   z4=atomd[2]
-   ax= (y2-y1)*(z2-z3)-(z2-z1)*(y2-y3)
-   ay= (z2-z1)*(x2-x3)-(x2-x1)*(z2-z3)
-   az= (x2-x1)*(y2-y3)-(y2-y1)*(x2-x3)
-   bx= (y3-y2)*(z3-z4)-(z3-z2)*(y3-y4)
-   by= (z3-z2)*(x3-x4)-(x3-x2)*(z3-z4)
-   bz= (x3-x2)*(y3-y4)-(y3-y2)*(x3-x4)
-   nbx= (y2-y3)*(z4-z3)-(z2-z3)*(y4-y3)
-   nby= (z2-z3)*(x4-x3)-(x2-x3)*(z4-z3)
-   nbz= (x2-x3)*(y4-y3)-(y2-y3)*(x4-x3)
-   torsion=180.0/math.pi*math.acos((ax*bx+ay*by+az*bz)/(math.sqrt(ax*ax+ay*ay+az*az)*math.sqrt(bx*bx+by*by+bz*bz)))
-   sign=180.0/math.pi*math.acos((nbx*(x2-x1)+nby*(y2-y1)+nbz*(z2-z1))/(math.sqrt(nbx*nbx+nby*nby+nbz*nbz)*math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1)+(z2-z1)*(z2-z1))))
-   if sign<90.0:
-      torsion=torsion*-1.0
-   return torsion
-
-
 #Read molecule data from an input file - currently Gaussian *com and *pdb supported
 class getinData:
     def __init__(self, file):
@@ -190,14 +109,14 @@ class getinData:
             if fileformat == "com":
                 for i in range(0,len(inlines)):
                     if inlines[i].find("#") > -1: self.JOBTYPE = inlines[i]
-        
+
         def accepted_file(file):
             filesplit = file.split(".")
             if len(filesplit) > 1: # there is an extension
                 for suffix in ["com", "pdb"]: # authorized suffix in ccparse
                     if filesplit[len(filesplit)-1] == suffix: return True
             return False
-        
+
         def getCHARGE(self, inlines):
             if fileformat == "com":
                 for i in range(0,len(inlines)):
@@ -208,19 +127,19 @@ class getinData:
                         if len(inlines[i+2].split()) == 0:
                             self.CHARGE = inlines[i+5].split()[0]
                             self.MULT = inlines[i+5].split()[1]
-        
+
         def getMEMREQ(self, inlines):
             if fileformat == "com":
                 for i in range(0,len(inlines)):
                     if inlines[i].find("%mem") > -1: self.MEMREQ = inlines[i].split("=")[1].rstrip("\n")
-        
-        
+
+
         def getNPROC(self, inlines):
             if fileformat == "com":
                 for i in range(0,len(inlines)):
                     if inlines[i].find("%nproc") > -1: self.NPROC = inlines[i].split("=")[1].rstrip("\n")
-        
-        
+
+
         def getATOMTYPES(self, inlines):
             if fileformat == "com":
                 for i in range(0,len(inlines)):
@@ -228,7 +147,7 @@ class getinData:
                         if len(inlines[i+1].split()) == 0: start = i+5
                         if len(inlines[i+2].split()) == 0: start = i+6
                         break
-                
+
                 self.ATOMTYPES = []
                 self.LEVELTYPES = []
                 self.MMTYPES = []
@@ -240,7 +159,7 @@ class getinData:
                         if len(inlines[i].split()[0].split(atominfo))>1:
                             mminfo = inlines[i].split()[0].lstrip(atominfo)
                             self.MMTYPES.append(mminfo)
-                        
+
                         self.ATOMTYPES.append(atominfo)
                         level = ""
                         for oniomlevel in ["H", "M", "L"]:
@@ -254,7 +173,7 @@ class getinData:
                        self.ATOMTYPES.append(int(inlines[i].split()[1]))
                     if inlines[i].find("HETATM")>-1:
                        self.ATOMTYPES.append(inlines[i].split()[-1])
-        
+
         def getCONNECTIVITY(self, inlines, natoms):
             if fileformat == "com":
                 for i in range(0,len(inlines)):
@@ -262,7 +181,7 @@ class getinData:
                         if len(inlines[i+1].split()) == 0: start = i+natoms+6
                         if len(inlines[i+2].split()) == 0: start = i+natoms+7
                         break
-                
+
                 if start < len(inlines):
                     self.CONNECTIVITY = []
                     j = 1
@@ -277,7 +196,7 @@ class getinData:
                                 for k in range(0,neighbors): bond.append((inlines[i].split()[1+2*k])+"__"+(inlines[i].split()[2+2*k]))
                             self.CONNECTIVITY.append(bond)
                             j = j+1
-                    
+
                     if len(self.CONNECTIVITY) == natoms:
                         for i in range(0, natoms):
                             for partner in self.CONNECTIVITY[i]:
@@ -290,7 +209,7 @@ class getinData:
                                     othernextatom = int(otherinfo[0])-1
                                     if othernextatom==i: nope=nope+1
                                 if nope==0: self.CONNECTIVITY[nextatom].append(str(i+1)+"__"+info[1])
-                    
+
                     self.OPTIONAL = []
                     for i in range(start+j,len(inlines)):
                         if len(inlines[i].split()) != 0: self.OPTIONAL.append(inlines[i])
@@ -326,8 +245,8 @@ class getinData:
                                 if othernextatom==i: nope=nope+1
                             if nope==0: self.CONNECTIVITY[nextatom].append(str(i+1)+"__"+info[1]) # add the connectivity to the nextatom
                 else:
-                    print "Error: Number of connectivity inconsistent with coordinates"
-                    
+                    print("Error: Number of connectivity inconsistent with coordinates")
+
         def getCARTESIANS(self, inlines, natoms):
             if fileformat == "com":
                 for i in range(0,len(inlines)):
@@ -335,7 +254,7 @@ class getinData:
                         if len(inlines[i+1].split()) == 0: start = i+5
                         if len(inlines[i+2].split()) == 0: start = i+6
                         break
-                
+
                 self.CARTESIANS = []
                 for i in range(start,len(inlines)):
                     if len(inlines[i].split()) == 0: break
@@ -357,7 +276,7 @@ class getinData:
                     if line.find("B") > -1 and line.find("F") > -1: self.CONSTRAINED.append([int(line.split(" ")[1])-1,int(line.split(" ")[2])-1])
                     if line.find("A") > -1 and line.find("F") > -1: self.CONSTRAINED.append([int(line.split(" ")[1])-1,int(line.split(" ")[2])-1]),int(line.split(" ")[3])-1
                     if line.find("D") > -1 and line.find("F") > -1: self.CONSTRAINED.append([int(line.split(" ")[1])-1,int(line.split(" ")[2])-1, int(line.split(" ")[3])-1, int(line.split(" ")[4])-1])
-        
+
         if accepted_file(file):
             # default values
             self.CHARGE = 0
@@ -385,18 +304,18 @@ class getinData:
             getCARTESIANS(self, inlines, self.NATOMS)
             getCONNECTIVITY(self, inlines, self.NATOMS)
             if hasattr(self, "OPTIONAL"): getCONSTRAINED(self, self.OPTIONAL)
-            if len(self.ATOMTYPES) == 0 or len(self.CARTESIANS) ==0: print "\nFATAL ERROR: Input file [ %s ] cannot be read"%file
+            if len(self.ATOMTYPES) == 0 or len(self.CARTESIANS) ==0: print("\nFATAL ERROR: Input file [ %s ] cannot be read"%file)
             #print "Input file data [ %s ]\n"% (file)
             #for i in range(len(self.CARTESIANS)):
-            #    print "%3s  %3s     %8.3f %8.3f %8.3f      CONNECT %s\n"% (i+1, self.ATOMTYPES[i], self.CARTESIANS[i][0],self.CARTESIANS[i][1],self.CARTESIANS[i][2], self.CONNECTIVITY[i]) 
-        else: print "\nError: Input file [ %s ] is not supported. [com, pdb] "
+            #    print "%3s  %3s     %8.3f %8.3f %8.3f      CONNECT %s\n"% (i+1, self.ATOMTYPES[i], self.CARTESIANS[i][0],self.CARTESIANS[i][1],self.CARTESIANS[i][2], self.CONNECTIVITY[i])
+        else: print("\nError: Input file [ %s ] is not supported. [com, pdb] ")
 
 #Read molecule data from an output file #######################
 class getoutData:
     def __init__(self, file):
-        
+
         self.NAME = file
-        
+
         def accepted_file(file):
             filesplit = file.split(".")
             if len(filesplit) > 1: # there is an extension
@@ -408,7 +327,7 @@ class getoutData:
             for i in range(0,len(outlines)):
                 if outlines[i].find("MOPAC") > -1: self.FORMAT = "Mopac"; break
                 if outlines[i].find("Gaussian") > -1: self.FORMAT = "Gaussian"; break
-        
+
         def getCHARGE(self, outlines, format):
             if format == "Mopac":
                 for i in range(0,len(outlines)):
@@ -426,8 +345,8 @@ class getoutData:
                         self.CHARGE = int(outlines[i].split()[2])
                         self.MULT = int(outlines[i].split()[5].rstrip("\n"))
                         break
-        
-        
+
+
         def getATOMTYPES(self, outlines, format):
             self.ATOMTYPES = []
             self.CARTESIANS = []
@@ -436,13 +355,15 @@ class getoutData:
                     if outlines[i].find("CHEMICAL") > -1: standor = i+3
                     if outlines[i].find("Empirical Formula") > -1:
                         self.NATOMS = int((outlines[i].split("="))[1].split()[0])
-                
+
                 if hasattr(self, "NATOMS"):
                     for i in range (standor,standor+self.NATOMS):
                         outlines[i] = outlines[i].replace("*", " ")
-                        self.ATOMTYPES.append((outlines[i].split()[3]))
-                        self.CARTESIANS.append([float(outlines[i].split()[5]), float(outlines[i].split()[6]), float(outlines[i].split()[7])])
-            
+                        #self.ATOMTYPES.append((outlines[i].split()[3]))
+                        self.ATOMTYPES.append(filter(lambda x: x.isalpha(), outlines[i].split()[3]))
+                        #print(outlines[i])
+                        self.CARTESIANS.append([float(outlines[i].split()[-3]), float(outlines[i].split()[-2]), float(outlines[i].split()[-1])])
+
             if format == "Gaussian":
                 for i in range(0,len(outlines)):
                     if outlines[i].find("Standard orientation") > -1:
@@ -455,8 +376,8 @@ class getoutData:
                     for i in range (standor+5,standor+5+self.NATOMS):
                         self.ATOMTYPES.append(elementID(int(outlines[i].split()[1])))
                         self.CARTESIANS.append([float(outlines[i].split()[3]),float(outlines[i].split()[4]),float(outlines[i].split()[5])])
-        
-        
+
+
         def getFREQS(self, outlines, format):
             self.FREQS = []
             if format == "Gaussian":
@@ -470,7 +391,7 @@ class getoutData:
                         if outlines[i].find("Zero-point correction") > -1: self.ZPE = float(outlines[i].split()[2])
                         if outlines[i].find("thermal Enthalpies") > -1: self.ENTHALPY = float(outlines[i].split()[6])
                         if outlines[i].find("thermal Free Energies") > -1: self.GIBBS = float(outlines[i].split()[7])
-        
+
         def getCPU(self, outlines, format):
             days = 0; hours = 0; mins = 0; secs = 0
             if format == "Mopac":
@@ -485,9 +406,8 @@ class getoutData:
                         mins = mins + int(outlines[i].split()[7])
                         secs = secs + int(float(outlines[i].split()[9]))
             self.CPU=[days,hours,mins,secs]
-        
-        
-        
+
+
         def getENERGY(self, outlines, format):
             if format == "Mopac":
                 for i in range(0,len(outlines)):
@@ -505,7 +425,7 @@ class getoutData:
                     if outlines[i].find("PM3") > -1: pm3 = i
                     if outlines[i].find("ONIOM") > -1: oniom = i
                     if outlines[i].find("SCF Done") > -1: scf = i
-                
+
                 calctype = [uff,am1,pm3,oniom,scf]
                 for i in range(0,len(outlines)):
                     if scf == max(calctype) and outlines[i].find("SCF Done") > -1 and outlines[i].find("Initial convergence to 1.0D-05 achieved")==-1: # Get energy from HF or DFT calculation
@@ -518,9 +438,9 @@ class getoutData:
                     if outlines[i].find("Total free energy in solution") > -1:
                         self.SOLVENERGY = (float(outlines[i+1].split()[7]))
 
-        
+
         if not os.path.exists(self.NAME):
-            print ("\nFATAL ERROR: Output file [ %s ] does not exist"%file)
+            print(("\nFATAL ERROR: Output file [ %s ] does not exist"%file))
         else:
             if accepted_file(file): #check extensions
                 outfile = open(self.NAME,"r")
@@ -533,17 +453,8 @@ class getoutData:
                     getFREQS(self, outlines, self.FORMAT)
                     getCPU(self, outlines, self.FORMAT)
             else:
-                print ("\nFATAL ERROR: Output file [ %s ] is not supported [.out, .log]"%file)
+                print(("\nFATAL ERROR: Output file [ %s ] is not supported [.out, .log]"%file))
 ###############################################################
-
-def concheck(conpar,val):
-   cons=[]
-   for a in range(len(conpar)):
-      for b in range(len(conpar[a])):
-         if val ==conpar[a][0]:
-            for c in range(len(conpar[a])-1):
-               cons.append(conpar[a][c+1])
-            return cons
 
 def twod_dist(a,b,c):
    vect1=np.subtract(a,b)
@@ -654,20 +565,20 @@ class calcSterimol:
       next_atom = molcart[atomB]
       vect1=np.subtract(getcoords(atomA,molcart),next_atom)
       if verbose == True:
-          print "   Atoms", atomA, "and", atomB, "define the L-axis and direction", vect1
+          print("   Atoms", atomA, "and", atomB, "define the L-axis and direction", vect1)
 
-          print "\n", "   Atom ".ljust(9), "  Xco/A".rjust(9), "  Yco/A".rjust(9), "  Zco/A".rjust(9), " VdW/pm".rjust(9)
-          print "   ##############################################"
+          print("\n", "   Atom ".ljust(9), "  Xco/A".rjust(9), "  Yco/A".rjust(9), "  Zco/A".rjust(9), " VdW/pm".rjust(9))
+          print("   ##############################################")
       # Remove the base atom from the list of atoms to be considered for sterics (after printing all)
-      atomlist = list(xrange(0,natoms))
+      atomlist = list(range(0,natoms))
       if verbose == True:
           for atom in atomlist:
-             if radii == "cpk": print "  ", sterimol_types[atom].ljust(6),
-             if radii == "bondi": print "  ", atomtype[atom].ljust(6),
+             if radii == "cpk": print("  ", sterimol_types[atom].ljust(6), end=' ')
+             if radii == "bondi": print("  ", atomtype[atom].ljust(6), end=' ')
              for coord in molcart[atom]:
-                if coord < 0.0: print "   %.3f".rjust(6) % coord,
-                else: print "    %.3f".rjust(6) % coord,
-             print "    %.1f" % round(vdw_radii[atom]*100)
+                if coord < 0.0: print("   %.3f".rjust(6) % coord, end=' ')
+                else: print("    %.3f".rjust(6) % coord, end=' ')
+             print("    %.1f" % round(vdw_radii[atom]*100))
       atomlist.remove(atomA)
 
       adjlist=[]; opplist=[]; theta=[]
@@ -760,167 +671,6 @@ def symcheck(carts):#Add symmetry criteria
    if min(distlist)<0.0000000001:ans=1
    else:ans=0
    return ans
-
-def calcSandwich(file):
-   metalatoms=[]
-   if file.split(".")[1]=="log" or file.split(".")[1]=="out":fileData=getoutData(file.split(".")[0])
-   if file.split(".")[1]=="com" or file.split(".")[1]=="gjf":fileData=getinData(file.split(".")[0])
-   for i in range(len(fileData.ATOMTYPES)):
-      if fileData.ATOMTYPES[i] in metals:metalatoms.append(i)
-
-   ivals=[]
-   jvals=[]
-   for i in range(len(fileData.ATOMTYPES)):
-      for j in range(len(fileData.ATOMTYPES)):
-         dist = ((fileData.CARTESIANS[i][0]-fileData.CARTESIANS[j][0])**2 +(fileData.CARTESIANS[i][1]-fileData.CARTESIANS[j][1])**2+(fileData.CARTESIANS[i][2]-fileData.CARTESIANS[j][2])**2)**0.5
-         if 0.01<dist<1.511 and fileData.ATOMTYPES[j] == "C" and fileData.ATOMTYPES[i] == "C":
-            ivals.append(i)
-            jvals.append(j)
-   conpar=[]
-   for a in range(len(ivals)):
-      rar=[]
-      rar.append(ivals[a])
-
-      for b in range(len(ivals)):
-         if ivals[a]==ivals[b]:rar.append(jvals[b])
-      if rar not in conpar:conpar.append(rar)
-
-   allrings=[]
-   for a in range(len(conpar)):
-      z=conpar[a][0]
-      for b in concheck(conpar,z):
-         y=b
-         for c in concheck(conpar,y):
-            x=c
-            for d in concheck(conpar,x):
-               w=d
-               for e in concheck(conpar,w):
-                  v=e
-                  rar=[]
-                  rar.extend([z,y,x,w,v])
-                  if z in concheck(conpar,v) and sorted(rar) not in allrings and len(set(rar))==5:allrings.append(sorted(rar))
-                  for f in concheck(conpar,v):
-                     u=f
-                     tar=[]
-                     tar.extend([z,y,x,w,v,u])
-                     if z in concheck(conpar,u) and sorted(tar) not in allrings and len(set(tar))==6:allrings.append(sorted(tar))
-
-
-
-   if not allrings:
-      for ma in metalatoms:
-         for s in range(len(fileData.CARTESIANS)):
-            if 0.1<np.linalg.norm(np.subtract(fileData.CARTESIANS[ma],fileData.CARTESIANS[s]))<2.1:allrings.append([s,s,s,s,s])
-
-   mcdists=[]
-   mcdist=9999
-   for ring in allrings:
-
-      if len(ring)==5:
-         tolman=[]
-         cent=avpoints(ring,fileData.CARTESIANS)
-         m=fileData.CARTESIANS[metalatoms[0]]
-         tempmcdist=mcdist
-         mcdist=distcalc(m,cent)
-         for b in metalatoms:#find closest metal to ring
-            m=fileData.CARTESIANS[b]
-            if mcdist>=distcalc(m,cent):mcdist=distcalc(m,cent);metal=b
-         mcdists.append([mcdist,metal])
-         frag=getfragment(ring[0],fileData.CARTESIANS)
-         vect1=np.subtract(getcoords(metal,fileData.CARTESIANS),cent)
-         if tempmcdist==mcdist:break#Stops if dealing with identical ring system as before (intended for symmetric dimers)
-         adjlist=[]
-         minadjlist=[]
-         opplist=[]
-         alpha=[]
-         beta=[]
-         theta=[]#Candidate Tolman angle substituent
-         omega=[]#standardised atom "dihedral" orientation
-         ringang=[]
-         for i in frag:
-            vect2=np.subtract(getcoords(metal,fileData.CARTESIANS),getcoords(i,fileData.CARTESIANS))
-            oppdist=calcopposite(metal,i,angle(vect1,vect2),fileData.CARTESIANS)
-            opplist.append(oppdist+genradii(i,fileData.CARTESIANS,fileData.ATOMTYPES))
-            adjdist=calcadj(metal,i,angle(vect1,vect2),fileData.CARTESIANS)
-            minadjlist.append(adjdist-genradii(i,fileData.CARTESIANS,fileData.ATOMTYPES))
-            adjlist.append(adjdist+genradii(i,fileData.CARTESIANS,fileData.ATOMTYPES))
-            alpha.append(angle(vect1,vect2))
-            hyp=distcalc(getcoords(i,fileData.CARTESIANS),getcoords(metal,fileData.CARTESIANS))
-            beta.append(math.asin(genradii(i,fileData.CARTESIANS,fileData.ATOMTYPES)/hyp))
-            theta.append(alpha[-1]+beta[-1])
-            if ring[0]!=ring[1]:omega.append(dihedral([10,10,10],getcoords(metal,fileData.CARTESIANS),cent,getcoords(i,fileData.CARTESIANS)))
-            if ring[0]!=ring[1] and i in ring:ringang.append(dihedral([10,10,10],getcoords(metal,fileData.CARTESIANS),cent,getcoords(i,fileData.CARTESIANS)))
-         B5=max(opplist)#Bondi
-         lval=max(adjlist)-min(minadjlist)
-         interval=180/len(ring)
-         if ring[0]!=ring[1]:
-            for k in ringang:
-               tlist=[];tang=[];tfrag=[]
-
-               for h in range(len(frag)):
-                  if k-interval<omega[h]<k+interval:tlist.append(frag[h])
-                  if k>(180-interval) and k-interval<omega[h]+360<k+interval:tlist.append(frag[h])
-                  if k<-(180-interval) and k-interval<omega[h]-360<k+interval:tlist.append(frag[h])
-               for t in range(len(frag)):
-                  if frag[t] in tlist: tang.append(theta[t]);tfrag.append(frag[t])
-               tolman.append(math.degrees(max(tang)))
-            x=0
-            for c in tolman:
-               x=x+c
-            tolmanCA=round(2*(x/len(tolman)),3)
-         else:tolmanCA=0
-         smcdist=round(mcdist,3);lval=round(lval,3);lval=round(lval,3);B5=round(B5,3)
-         molcart=fileData.CARTESIANS
-         zcarts=[]
-         for i in frag:
-            zcarts.append(np.subtract(molcart[i],molcart[metal]))
-         zvect=[0,0,1]
-         zcent=np.subtract(cent,molcart[metal])
-         for cart in range(len(zcarts)):
-            zcoord= rotrel(zcent,zvect,zcarts[cart])
-            zcarts[cart]=zcoord
-         twodcarts=[]
-         for row in zcarts:
-            twodcarts.append([row[0],row[1]])
-         fragrad=[]#radii of fragment atoms
-         for t in frag:
-            fragrad.append(genradii(t,fileData.CARTESIANS,fileData.ATOMTYPES))
-         singledist=[]
-         for t in range(len(fragrad)):
-            d=np.linalg.norm(twodcarts[t])#;print d
-            d=d+fragrad[t]
-            singledist.append(d)
-         newB5=round(max(singledist),3)#This is the same as the 3D calculated value from above
-
-         center=[0,0]
-         vlist=[]#list of distances from the origin to the tangential vectors
-         alist=[]#list of atoms between which the tangential vectors pass through no other atoms
-         iav=[]#interatomic vectors
-
-         for x in range(len(twodcarts)):
-            for y in range(len(twodcarts)):
-               if x!=y:
-                  try:nvect= (twod_vect(center,twodcarts[x],twodcarts[y]))#origin normal vector to connecting atomic centers vector
-                  except ValueError:nvect=[0,0]
-                  iav=np.subtract(twodcarts[x],twodcarts[y])#interatomic vector
-                  iad=np.linalg.norm(iav)#interatomic distance
-                  try:theta=math.asin((fragrad[y]-fragrad[x])/iad)#calculates angle by which to rotate vdw radii before adding
-                  except ValueError: theta=np.pi/2
-                  try:unvect=nvect/np.linalg.norm(nvect)
-                  except RuntimeWarning:pass#unvect=[0,0]
-                  xradv=twod_rot(unvect*fragrad[x],theta)
-                  yradv=twod_rot(unvect*fragrad[y],theta)
-                  nvect= (twod_vect(center,twodcarts[x]+xradv,twodcarts[y]+yradv))#origin normal vector to connecting atomic surfaces tangential vector
-                  newx=twodcarts[x]+xradv
-                  newy=twodcarts[y]+yradv
-                  if np.cross(nvect,xradv)<0.000000001 and theta!=np.pi/2:
-                     satpoint=[]#Satisfied points not within range of tangential vector
-                     for z in range(len(twodcarts)):
-                        pvdist=twod_dist(twodcarts[z],newx,newy)
-                        if z!=x and z!=y and pvdist>fragrad[z]:satpoint.append(pvdist)
-                     if len(satpoint)==len(frag)-2:vlist.append(np.linalg.norm(nvect));alist.append([x,y])#;print x,y
-         B1=round(min(vlist),3)
-         print "   "+file.ljust(25),str(tolmanCA).rjust(9), str(smcdist).rjust(9), str(lval).rjust(9),str(B1).rjust(9), str(newB5).rjust(9)
 
 molmod=[['Bq', 0, 0, 0, 0],
         ['H', 1, 1, 1, 1],

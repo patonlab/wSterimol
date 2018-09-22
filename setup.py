@@ -1,4 +1,5 @@
 #!/usr/bin/python
+from __future__ import print_function, absolute_import
 
 import sys, os
 
@@ -16,20 +17,20 @@ class Setup:
         self.procsshared = "8"
         self.leveloftheory = "wb97xd/6-31g(d)"
         self.spin = "1"
-        self.RJCT = 0.50 
+        self.RJCT = 0.50
         self.singlepointcalculation = ""
         self.Temperature = 298
         self.energywindow_cutoff = []
         self.print_cutoff = 5.0
         self.angle_count = 5
         self.radii = "cpk"
-        if path != "default": 
+        if path != "default":
             self.path = os.path.join(path, "setup.ini")
-        else: 
+        else:
             self.path = "setup.ini"
         #load setup.ini
-        if os.path.exists(self.path): 
-            file = open(self.path,"r") 
+        if os.path.exists(self.path):
+            file = open(self.path,"r")
             lines = file.readlines()
             file.close()
             for k in range(len(lines)):
@@ -48,29 +49,29 @@ class Setup:
                 if len(config) == 2: #if not, we ignore. It is an empty config value or a commentline
                     for i in range(len(config)):
                         config[i] = config[i].strip(' ').strip('\n').strip('\t')
-                    if config[0] == "MOPAC_EXEC":
+                    if config[0] == "PROG_EXEC":
                         if exe != "default": #define a new value for exe
-                            if os.path.exists(exe): 
-                                lines[k] = "MOPAC_EXEC = \'"+exe+"\'\n"
+                            if os.path.exists(exe):
+                                lines[k] = "PROG_EXEC = \'"+exe+"\'\n"
                                 replacethisfile = open(self.path,"w")
                                 for line in lines: replacethisfile.write(line)
                                 replacethisfile.close()
                                 config[1] = exe
-                            else: 
+                            else:
                                 log.write("Warning: Specified path to executable doesn't exist. Use setup.ini value.")
                         if not os.path.exists(config[1]):
                             self.loaded = False
                             log.write("Error: Specified path to executable in self.ini doesn't exist. [%s]" % config[1])
                             return
                         self.exe = config[1]
-                    elif config[0] == "SEMI_EMPIRICAL": 
+                    elif config[0] == "SEMI_EMPIRICAL":
                         self.SE = config[1]
                     elif config[0] == "CHARGE":
                         if self.number(config[1]):
                             self.charge = int(config[1])
                         else: log.write("Warning: the charge is not a number [%s]. Default Neutral." % config[1])
                     elif config[0] == "OPTIMISATION": # single point calculation # yes (SCF) or no (optimisation)
-                        config[1] = config[1].lower() 
+                        config[1] = config[1].lower()
                         if config[1] == "no":
                             self.scf = "1SCF"
                         else:
@@ -80,7 +81,7 @@ class Setup:
                             self.rmsd_cutoff = float(config[1])
                         else:
                             log.write("Warning: RMSD_CLUSTER_OPT value is not a number [%s]. Default value 0.1 Angstroms. %s " % (config[1], self.number(config[1])))
-                    elif config[0] == "MEMORIES": # Memories 
+                    elif config[0] == "MEMORIES": # Memories
                         if self.number(config[1]) == True:
                             self.memories = int(config[1])
                         else:
@@ -99,7 +100,7 @@ class Setup:
                             log.write("Warning: SPIN value is not a number [%s]. Default value is 1. [bool - %s] " % (config[1], self.number(config[1])))
                     elif config[0] == "SOFTWARE": # SOFTWARE to use to optimise
                         self.software = config[1].upper()
-                    elif config[0] == "RJCT": # RJCT is highly important. Define how close 2 atoms can be according to their diameter. 
+                    elif config[0] == "RJCT": # RJCT is highly important. Define how close 2 atoms can be according to their diameter.
                         if self.number(config[1]) == True:
                             self.RJCT = float(config[1])
                         else:
@@ -130,17 +131,17 @@ class Setup:
                     elif config[0] == "SPC_LEVELOFTHEORY": # Single Point Calculation level of theory after optimisation
                         self.singlepointcalculation = config[1] #no check due to the vast diversity
                     elif config[0] == "ATOMIC_MODEL": # atomic model for filter_gen and sterimol
-                        radii = config[1].lower() 
-                        if radii != "cpk" and radii != "bondi": 
+                        radii = config[1].lower()
+                        if radii != "cpk" and radii != "bondi":
                             radii = "cpk"
                             log.write("Warning: Radii must be \"cpk\" or \"bondi\". CPK atomic model is used by default.")
-                        self.radii = config[1] 
+                        self.radii = config[1]
                     else:
                         log.write("Warning: Unknown setting in setup.ini. Check spelling [%s]" % config[0])
         else:
             self.loaded = False
             log.write("Warning: can't find setup.ini. Default values are used. [%s]" % self.path)
-    
+
     def isLoaded(self):
         return self.loaded
 
@@ -151,5 +152,3 @@ class Setup:
         except ValueError:
             return False
         return True
-
-

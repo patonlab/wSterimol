@@ -1,6 +1,7 @@
 #!/usr/bin/python
+from __future__ import print_function, absolute_import
 
-import subprocess, sys, os, math, datetime, shutil, getpass
+import subprocess, sys, os, math, datetime, shutil
 from os import listdir
 from os.path import isfile, join
 
@@ -10,7 +11,7 @@ from pymol import cmd
 ########### F I L T E R - G ############
 ########################################
 
-# Filter impossible structures after being generated via Pymol. 
+# Filter impossible structures after being generated via Pymol.
 # Plausible structures can be visualized from visualize.py
 # Use in Pymol command prompt:
 # run log.py
@@ -25,8 +26,8 @@ def filter_gen(directory = "temp", setup_path = "default", verbose = "False"):
     if os.path.exists(directory):
         # Log generation
         log_path = "log-%s" % (datetime.date.today())
-        if os.path.exists(log_path+".pylog"): 
-            print "Warning: Continuing previous log file [%s.pylog]" % log_path
+        if os.path.exists(log_path+".pylog"):
+            print("Warning: Continuing previous log file [%s.pylog]" % log_path)
         log = Log(log_path,"pylog")
         log.write("\n\n########################################\n########### F I L T E R - G ############\n########################################\n\n")
         #verbose
@@ -34,7 +35,7 @@ def filter_gen(directory = "temp", setup_path = "default", verbose = "False"):
         else: verbose = False
         # Create a bin folder for the filtered structures
         bin_path = "%s/filter-bin-%s" % (directory, datetime.date.today())
-        if not os.path.exists(bin_path): 
+        if not os.path.exists(bin_path):
             os.makedirs(bin_path)
             log.write("Filtration folder has been created in the directory to store the filtered structures [%s]" % bin_path, verbose)
         # Retrieve all the files in the directory
@@ -60,10 +61,10 @@ def filter_gen(directory = "temp", setup_path = "default", verbose = "False"):
                 log.finalize()
             else: log.write("Error: Failed to load setup.ini in [%s]. Fix it to continue." % setup_path)
         else: log.write("Error: No file to filter in the directory [%s]" % directory)
-    else: print "FATAL ERROR: Specified directory doesn't exist [%s]" % directory
-        
+    else: print("FATAL ERROR: Specified directory doesn't exist [%s]" % directory)
 
-def nonbonded_clash(directory, file, radii, RJCT, log, verbose):  
+
+def nonbonded_clash(directory, file, radii, RJCT, log, verbose):
     # retrieve the data
     try: MolSpec = getinData(join(directory, file))
     except NameError: return False
@@ -71,13 +72,13 @@ def nonbonded_clash(directory, file, radii, RJCT, log, verbose):
         if checkDists(MolSpec, radii, RJCT, log, verbose) != 0:
             return True
         else: return False
-    else: 
+    else:
         log.write("Warning: Failed to read the file. No calculation. Skip the file. [%s]" % join(directory, file))
         return False
 
 # Filter prior to optimization - if there are any very close nonbonded contacts, a non-zero value is returned
 def checkDists(MolSpec, radii, RJCT, log, verbose):
- # RJCT is highly important. Define how close 2 atoms can be according to their diameter. 
+ # RJCT is highly important. Define how close 2 atoms can be according to their diameter.
     checkval = 0
     for i in range(0,len(MolSpec.CARTESIANS)): # for each atom i
         bondedatomlist = [] # retrieve bonded atoms to i
@@ -193,7 +194,7 @@ elements = ["H","He","Li","Be","B","C","N","O","F","Ne","Na","Mg","Al","Si",
         "Rn","Fr","Ra","Ac","Th","Pa","U","Np","Pu","Am","Cm","Bk","Cf","Es","Fm",
         "Md","No","Lr","Rf","Db","Sg","Bh","Hs","Mt","Ds","Rg","Uub","Uut","Uuq",
         "Uup","Uuh","Uus","Uuo"]
-   
+
 def calcdist(atoma,atomb,coords):
     x1=coords[atoma][0]
     y1=coords[atoma][1]
@@ -204,23 +205,21 @@ def calcdist(atoma,atomb,coords):
     ba = [x1-x2, y1-y2, z1-z2]
     dist = math.sqrt(ba[0]*ba[0]+ba[1]*ba[1]+ba[2]*ba[2])
     return dist
-    
+
 def atomicnumber(element):
     periodictable = ["","H","He","Li","Be","B","C","N","O","F","Ne","Na","Mg","Al","Si","P","S","Cl","Ar","K","Ca","Sc","Ti","V","Cr","Mn","Fe","Co","Ni","Cu","Zn","Ga","Ge","As","Se","Br","Kr","Rb","Sr","Y","Zr",
                      "Nb","Mo","Tc","Ru","Rh","Pd","Ag","Cd","In","Sn","Sb","Te","I","Xe","Cs","Ba","La","Ce","Pr","Nd","Pm","Sm","Eu","Gd","Tb","Dy","Ho","Er","Tm","Yb","Lu","Hf","Ta","W","Re","Os","Ir","Pt","Au","Hg","Tl",
                      "Pb","Bi","Po","At","Rn","Fr","Ra","Ac","Th","Pa","U","Np","Pu","Am","Cm","Bk","Cf","Es","Fm","Md","No","Lr","Rf","Db","Sg","Bh","Hs","Mt","Ds","Rg","Uub","Uut","Uuq","Uup","Uuh","Uus","Uuo"]
-    atomicno = 0
+    
     for i in range(0,len(periodictable)):
         if element == periodictable[i]: return i
-    
+
 def accepted_file(file):
     filesplit = file.split(".")
     if len(filesplit) > 1: # there is an extension
         for suffix in ["pdb", "com"]: # authorized suffix
             if filesplit[len(filesplit)-1] == suffix: return True
-    return False  
-    
+    return False
+
 
 cmd.extend("filter_gen",filter_gen)
-
-

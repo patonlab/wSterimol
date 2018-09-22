@@ -1,6 +1,7 @@
 #!/usr/bin/python
+from __future__ import print_function, absolute_import
 
-#Python Libraries 
+#Python Libraries
 import subprocess, sys, os
 from os import listdir
 from os.path import isfile, join
@@ -10,7 +11,7 @@ import datetime
 from pymol import cmd
 
 ########################################
-########### S t E R I M O L ############
+########### S T E R I M O L ############
 ########################################
 
 # Generate the Sterimol parameters from the optimised structures
@@ -27,10 +28,10 @@ def Sterimol(atomid1 = 1, atomid2 = 2, directory = "temp", setup_path = "default
     if os.path.exists(directory):
         # Log generation
         log_path = "log-%s" % (datetime.date.today())
-        if os.path.exists(log_path+".pylog"): 
-            print "Warning: Continuing previous log file [%s.pylog]" % log_path
+        if os.path.exists(log_path+".pylog"):
+            print("Warning: Continuing previous log file [%s.pylog]" % log_path)
         log = Log(log_path,"pylog")
-        log.write("\n\n########################################\n########### S t E R I M O L ############\n########################################\n\n")
+        log.write("\n\n########################################\n########### S T E R I M O L ############\n########################################\n\n")
         # Check arguments to avoid an error later
         if verbose.lower() in ['true', '1', 't', 'y', 'yes']:
             verbose = True
@@ -84,8 +85,6 @@ def Sterimol(atomid1 = 1, atomid2 = 2, directory = "temp", setup_path = "default
                 log.finalize()
             else: log.write("Error: Failed to load setup.ini in [%s]. Fix it to continue." % setup_path)
         else: log.write("Error: No file in the directory [%s]" % directory)
-    else: print "FATAL ERROR: Specified directory doesn't exist [%s]" % directory
-        
+    else: print("FATAL ERROR: Specified directory doesn't exist [%s]" % directory)
+
 cmd.extend("sterimol",Sterimol)
-
-

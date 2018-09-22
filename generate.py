@@ -1,6 +1,7 @@
 #!/usr/bin/python
+from __future__ import print_function, absolute_import
 
-import subprocess, sys, os, math, datetime, shutil, getpass
+import subprocess, sys, os, math, datetime, shutil
 
 from pymol import cmd
 
@@ -17,11 +18,11 @@ from pymol import cmd
 # example: generate [[id 1, id 2, id 3, id 6],[id 2, id 3, id 6, id 11]], conformers
 
 def generate(dihedrals, directory = "temp", setup_path = "default", verbose = "False", force = False):
-    # dihedrals = [[atom a, atom b, atom c, atom d]] 
+    # dihedrals = [[atom a, atom b, atom c, atom d]]
     # Log generation
     log_path = "log-%s" % (datetime.date.today())
-    if os.path.exists(log_path+".pylog"): 
-        print "Warning: Continuing previous log file [%s.pylog]" % log_path
+    if os.path.exists(log_path+".pylog"):
+        print("Warning: Continuing previous log file [%s.pylog]" % log_path)
     log = Log(log_path,"pylog")
     log.write("\n\n########################################\n########### G E N E R A T E ############\n########################################\n\n")
     #verbose
