@@ -51,11 +51,6 @@ def Sterimol(atomid1 = 1, atomid2 = 2, directory = "temp", setup_path = "default
             if setup.isLoaded() == True:
                 output = open("Sterimol.txt", 'w' )
                 output.write("*******************************************************************************\n")
-                output.write("** For non-commercial use only                                  Version %.2f **\n" % version)
-                output.write("*******************************************************************************\n")
-                output.write("** Cite this program as:  to be determined                                   **\n")
-                output.write("** Paton Computational Chemistry Group,   web: http://paton.chem.ox.ac.uk    **\n")
-                output.write("*******************************************************************************\n")
                 output.write("**                                                                           **\n")
                 output.write("**                             S T E R I M O L                               **\n")
                 output.write("**                                                                           **\n")

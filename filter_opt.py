@@ -118,11 +118,6 @@ def filter_opt(directory = "temp", setup_path = "default", verbose = "False"):
                 # create output
                 output = open("energies.txt", 'w' )
                 output.write("*******************************************************************************\n")
-                output.write("** For non-commercial use only                                  Version %.2f **\n" % version)
-                output.write("*******************************************************************************\n")
-                output.write("** Cite this program as:  to be determined                                   **\n")
-                output.write("** Paton Computational Chemistry Group,   web: http://paton.chem.ox.ac.uk    **\n")
-                output.write("*******************************************************************************\n")
                 output.write("**                                                                           **\n")
                 output.write("**                             E N E R G I E S                               **\n")
                 output.write("**                                                                           **\n")
