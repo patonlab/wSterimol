@@ -203,4 +203,4 @@ This code is released under the MIT license. Commercial use, Modification, Distr
 Brethomé, A. V.; Fletcher, S. P.; Paton, R. S. *manuscript submitted* **2018**
 
 The python implementation of Sterimol parameters was first reported in:
-*Correlating Reactivity and Selectivity to Cyclopentadienyl Ligand Properties in Rh(III)-Catalyzed C-H Activation Reactions: an Experimental and Computational Study* Piou, T.; Romanov-Michailidis, F.; Romanova-Michaelides, T.; Jackson, K. E.; Semakul, N.; Taggart, T. D.; Newell, B S.; Rithner, C. D.; Paton, R. S.; Rovis, T. *J. Am. Chem. Soc.* **2017** *139*, 1296–1310[DOI: 10.1021/jacs.6b11670](http://dx.doi.org/10.1021/jacs.6b11670)
+*Correlating Reactivity and Selectivity to Cyclopentadienyl Ligand Properties in Rh(III)-Catalyzed C-H Activation Reactions: an Experimental and Computational Study* Piou, T.; Romanov-Michailidis, F.; Romanova-Michaelides, T.; Jackson, K. E.; Semakul, N.; Taggart, T. D.; Newell, B S.; Rithner, C. D.; Paton, R. S.; Rovis, T. *J. Am. Chem. Soc.* **2017** *139*, 1296–1310 [DOI: 10.1021/jacs.6b11670](http://dx.doi.org/10.1021/jacs.6b11670)
