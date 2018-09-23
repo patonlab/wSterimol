@@ -1,5 +1,4 @@
 run Documents/GitHub/wSterimol/visualize.py
-run Documents/GitHub/wSterimol/log.py
 run Documents/GitHub/wSterimol/setup.py
 run Documents/GitHub/wSterimol/generate.py
 run Documents/GitHub/wSterimol/filter_gen.py
