@@ -121,7 +121,7 @@ def weight(setup_path = "default", verbose = "False"):
                     output.write("* CALCULATION WITH %-30s                             *\n" % setup.software)
                     if setup.software == "MOPAC":
                         output.write("* MOPAC EXECUTIVE PATH: %-53s *\n" % setup.exe)
-                        output.write("* using force-field: %-56s *\n" % setup.SE)
+                        output.write("* level of theory: %-56s *\n" % setup.SE)
                         keywords = "%s charge=%s %s" % (setup.SE, setup.charge, setup.scf)
                         output.write("* %-75s *\n" % keywords)
                     elif setup.software == "GAUSSIAN":

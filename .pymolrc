@@ -1,0 +1,12 @@
+run Documents/GitHub/wSterimol/visualize.py
+run Documents/GitHub/wSterimol/log.py
+run Documents/GitHub/wSterimol/setup.py
+run Documents/GitHub/wSterimol/generate.py
+run Documents/GitHub/wSterimol/filter_gen.py
+run Documents/GitHub/wSterimol/prepare_file.py
+run Documents/GitHub/wSterimol/optimisation.py
+run Documents/GitHub/wSterimol/filter_opt.py
+run Documents/GitHub/wSterimol/sterimoltools.py
+run Documents/GitHub/wSterimol/sterimol.py
+run Documents/GitHub/wSterimol/weight.py
+run Documents/GitHub/wSterimol/wSterimol.py

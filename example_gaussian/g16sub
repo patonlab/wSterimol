@@ -1,0 +1,6 @@
+export g16root=/Applications
+export GAUSS_SCRDIR=$TMPDIR
+source $g16root/g16/bsd/g16.profile
+
+
+g16 <$1.com >$1.out
