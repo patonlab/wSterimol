@@ -15,7 +15,7 @@ from pymol import cmd
 # Optimisation of the structures via Pymol with MOPAC
 # Use in Pymol command prompt:
 # run log.py
-# run ccParse.py
+# run sterimoltools.py
 # run setup.py
 # run optimisation.py
 # optimisation (directory, walltime, verbose, setup_path)

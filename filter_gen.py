@@ -15,7 +15,7 @@ from pymol import cmd
 # Plausible structures can be visualized from visualize.py
 # Use in Pymol command prompt:
 # run log.py
-# run ccParse.py
+# run sterimoltools.py
 # run setup.py
 # run filter_gen.py
 # filter_gen (directory, setup_path, verbose)
