@@ -10,7 +10,7 @@ wSterimol is an automated computational workflow which computes multidimensional
                     W E I G H T E D   S T E R I M O L                      
 ```
 
-All code is written in Python and was developed by [Alex Brethomé](http://www.oxfordsynthesiscdt.ox.ac.uk/people/students/2015cohort.html) at the University of Oxford and [Robert Paton](http://wwww.patonlab.com) at Colorado State University. The underlying python implementation of Sterimol parameters was written by Kelvin Jackson and Robert Paton and is available as a [command-line tool](https://github.com/bobbypaton/Sterimol)
+All code is written in Python and was developed by [Alexandre Brethomé](http://www.oxfordsynthesiscdt.ox.ac.uk/people/students/2015cohort.html) at the University of Oxford and [Robert Paton](http://wwww.patonlab.com) at Colorado State University. The underlying python implementation of Sterimol parameters was written by Kelvin Jackson and Robert Paton and is available as a [command-line tool](https://github.com/bobbypaton/Sterimol)
 
 ## Getting Started
 
