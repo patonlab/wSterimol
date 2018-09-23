@@ -87,7 +87,7 @@ ENERGYWINDOW_CUTOFF = 1.0 3.0 5.0
 PRINT_CUTOFF = 5.0
 ```
 
-Most of these options are self-explanatory. We are using Mopac as the external program using the PM6-D3H4 level of theory to optimize geometries, for a molecule which has no charge and is closed-shell. The RMSD value is used to decide whether two conformers are distinct and the angle count is how the dihedral angles are searched. The Sterimol parameters will be computed using Bondi atomic radii, and will be Boltzmann-average using the PM6-D3H4 energies at 298K. The full path of the program needs to match where this is installed on your machine: the locations shown are the defaults for OSX and Windows. These scripts can be commented using # symbols at the start of the line.
+Most of these options are self-explanatory. We are using Mopac as the external program using the PM6-D3H4 level of theory to optimize geometries, for a molecule which has no charge and is closed-shell. The RMSD value is used to decide whether two conformers are distinct and the angle count is how the dihedral angles are searched. The Sterimol parameters will be computed using CPK atomic radii, and will be Boltzmann-average using the PM6-D3H4 energies at 298K. The full path of the program needs to match where this is installed on your machine: the locations shown are the defaults for OSX and Windows. These scripts can be commented using # symbols at the start of the line.
 
 Now it should be possible to load the structure file (again typing in the PyMol console)
 
@@ -175,7 +175,7 @@ load pentane.pdb
 wSterimol [[id 1, id 3, id 4, id 5],[id 3, id 4, id 5, id 2]], 1, 3
 ```
 
-Reults in the following output in 'weighted.txt'
+Results in the following output in 'weighted.txt'
 
 ```
 Structures                   E (kcal/mol)  L1 (A)  B1 (A)  B5 (A)    (%)
