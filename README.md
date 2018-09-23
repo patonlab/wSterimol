@@ -182,26 +182,14 @@ pentane_10.out                       0.48    6.29    1.90    4.10  12.22
 **                          6.33      1.79      3.75                         **
 *******************************************************************************
 ```
- 
+
 The Sterimol parameters for the most stable conformer (pentane_18, trans-trans) are: L1 = 7.39, B1 = 1.67, B5 = 2.74. These all differ by < 0.05Å when compared with the earlier semi-empirical values, since both sets of calculations predict the same conformation to be most stable. The weighted values do show more variation though, as one might expect, since these depend on the relative conformer energies which are generally more method-dependent than the structures themselves. So we see that the DFT results produce a shorter weighted L1 by 0.4Å and a wider B5 by 0.2Å, as this level of theory predicts that the population of the long-and-narrow trans,trans-conformer is smaller (27 vs 35%).
 
-
-## Authors
-
-* **A. V. Brethomé** - *Initial work*
-* **S. P. Fletcher** - *Initial work*
-* **R. S. Paton** - *Initial work*
-
-## License
-
-This project is licensed under the MIT License.
-
-## Funding
+## Acknowledgements
 
 We acknowledge the [EPSRC Centre for Doctoral Training in Synthesis for Biology and Medicine](http://www.oxfordsynthesiscdt.ox.ac.uk/) (EP/L015838/1) for a studentship to A. V. B., generously supported by AstraZeneca, Diamond Light Source, De- fense Science and Technology Laboratory, Evotec, GlaxoSmithKline, Janssen, Novartis, Pfizer, Syngenta, Takeda, UCB and Vertex.
 
 ## Citation
 
-Please, cite this work using:
-
-* To be determined
+This code is released under the MIT license. Commercial use, Modification, Distribution and Private use are all permitted. The use of wSterimol can be acknowledged with the following citation:
+Brethomé, A. V.; Fletcher, S. P.; Paton, R. S. *manuscript submitted* **2018**
