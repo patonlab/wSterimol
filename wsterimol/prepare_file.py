@@ -13,7 +13,7 @@ from pymol import cmd
 
 # Prepare structures via Pymol for Mopac or Gaussian
 # Use in Pymol command prompt:
-# run log.py
+# run wSterimol.py
 # run sterimoltools.py
 # run setup.py
 # run prepare_file.py

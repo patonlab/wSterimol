@@ -14,14 +14,14 @@ from pymol import cmd
 
 # Optimisation of the structures via Pymol with MOPAC
 # Use in Pymol command prompt:
-# run log.py
+# run wSterimol.py
 # run sterimoltools.py
 # run setup.py
 # run optimisation.py
 # optimisation (directory, walltime, verbose, setup_path)
 # example: optimisation conformers
 
-def optimisation(directory = "temp", walltime = 300, verbose = "False", setup_path = "default"):
+def optimisation(directory = "temp", walltime = 300, verbose = "False", setup_path = "default", silentmode = "True"):
     # If the directory exists
     if os.path.exists(directory):
         # Log generation
@@ -33,6 +33,9 @@ def optimisation(directory = "temp", walltime = 300, verbose = "False", setup_pa
         #verbose
         if verbose.lower() in ['true', '1', 't', 'y', 'yes']: verbose = True
         else: verbose = False
+        #silentmode
+        if silentmode.lower() in ['true', '1', 't', 'y', 'yes']: silentmode = True
+        else: silentmode = False
         # Retrieve all the files in the directory
         files = [f for f in listdir(directory) if isfile(join(directory, f))]
         if len(files) > 0:
@@ -56,7 +59,7 @@ def optimisation(directory = "temp", walltime = 300, verbose = "False", setup_pa
                                     log.write("\n-------------------------\nJob starts [%s]" % join(directory, filename), verbose)
                                     # calculate the energy
                                     startupinfo = None
-                                    if platform.system() == "Windows":
+                                    if platform.system() == "Windows" and silentmode == True:
                                         # Prevent .exe window from popping up in Windows
                                         startupinfo = subprocess.STARTUPINFO()
                                         startupinfo.dwFlags |= subprocess.STARTF_USESTDHANDLES | subprocess.STARTF_USESHOWWINDOW
@@ -93,7 +96,7 @@ def optimisation(directory = "temp", walltime = 300, verbose = "False", setup_pa
                                     log.write("\n-------------------------\nJob starts [%s]" % join(directory, filename), verbose)
                                     # calculate the energy
                                     startupinfo = None
-                                    if platform.system() == "Windows":
+                                    if platform.system() == "Windows" and silentmode == True:
                                         # Prevent .exe window from popping up in Windows
                                         startupinfo = subprocess.STARTUPINFO()
                                         startupinfo.dwFlags |= subprocess.STARTF_USESTDHANDLES | subprocess.STARTF_USESHOWWINDOW

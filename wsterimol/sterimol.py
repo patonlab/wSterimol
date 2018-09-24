@@ -16,8 +16,7 @@ from pymol import cmd
 
 # Generate the Sterimol parameters from the optimised structures
 # Use in Pymol command prompt:
-# run log.py
-# run sterimoltools.py
+# run wSterimol.py
 # run setup.py
 # run sterimoltools.py
 # run sterimol.py

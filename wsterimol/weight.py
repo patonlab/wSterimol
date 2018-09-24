@@ -106,9 +106,9 @@ def weight(setup_path = "default", verbose = "False"):
                     output.write("** For non-commercial use only                                  Version %.2f **\n" % version)
                     output.write("*******************************************************************************\n")
                     output.write("** Developed by:                                                             **\n")
-                    output.write("** Alex Brethome - University of Oxford                                      **\n")
+                    output.write("** Alexandre Brethome - University of Oxford                                 **\n")
                     output.write("** Robert Paton - Colorado State University (patonlab.com)                   **\n")
-                    output.write("** If you use wSterimol, please acknowledge: Brethome, A.; Fletcher, S. P.;  **\n")
+                    output.write("** If you use wSterimol, please acknowledge:Brethome, A. V.; Fletcher, S. P.;**\n")
                     output.write("** Paton, R. S. submitted 2018                                               **\n")
                     output.write("*******************************************************************************\n")
                     output.write("**                   ____ ______ ____ ___   ____ __  ___ ____   __           **\n")
@@ -166,6 +166,9 @@ def weight(setup_path = "default", verbose = "False"):
                     output.write("**                       %7.2f   %7.2f   %7.2f                         **\n" % (L1_weighted,B1_weighted,B5_weighted))
                     output.write("**                                                                           **\n")
                     output.write("*******************************************************************************\n")
+                    # log update showing results
+                    log.write(" wL (A)   wB1 (A)   wB5 (A) \n")
+                    log.write(" %7.2f   %7.2f   %7.2f \n" % (L1_weighted,B1_weighted,B5_weighted))
                     # calculate min max for each different energy windows
                     for k in range(len(setup.energywindow_cutoff)):
                         output.write("\n\n*******************************************************************************\n")

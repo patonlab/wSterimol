@@ -7,20 +7,20 @@ class Setup:
     def __init__(self, log, path = "default", exe = "default"):
         #default values
         self.software = "MOPAC" # Mopac by default
-        self.loaded = True # good by default
-        self.exe = "C:\PROGRA~1\MOPAC\MOPAC2016.exe" #default install for Mopac in Windows
+        self.loaded = True # good by default, then might get wrong
+        self.exe = "C:\PROGRA~1\MOPAC\MOPAC2016.exe" #default install for MOPAC in Windows
         self.SE = "PM6-DH2" # default force field
         self.charge = "0" # uncharged
         self.scf = "" # optimisation
         self.rmsd_cutoff = 0.1 # Angstroms
-        self.memories = "8"
-        self.procsshared = "8"
+        self.memories = "8" 
+        self.procsshared = "8" 
         self.leveloftheory = "wb97xd/6-31g(d)"
         self.spin = "1"
         self.RJCT = 0.50
-        self.singlepointcalculation = ""
+        self.singlepointcalculation = "" #none
         self.Temperature = 298
-        self.energywindow_cutoff = []
+        self.energywindow_cutoff = [] # none
         self.print_cutoff = 5.0
         self.angle_count = 5
         self.radii = "cpk"
@@ -61,7 +61,7 @@ class Setup:
                                 log.write("Warning: Specified path to executable doesn't exist. Use setup.ini value.")
                         if not os.path.exists(config[1]):
                             self.loaded = False
-                            log.write("Error: Specified path to executable in self.ini doesn't exist. [%s]" % config[1])
+                            log.write("Error: Specified path to executable in setup.ini doesn't exist. [%s]" % config[1])
                             return
                         self.exe = config[1]
                     elif config[0] == "SEMI_EMPIRICAL":

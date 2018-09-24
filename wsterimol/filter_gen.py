@@ -14,7 +14,7 @@ from pymol import cmd
 # Filter impossible structures after being generated via Pymol.
 # Plausible structures can be visualized from visualize.py
 # Use in Pymol command prompt:
-# run log.py
+# run wSterimol.py
 # run sterimoltools.py
 # run setup.py
 # run filter_gen.py

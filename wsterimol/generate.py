@@ -11,7 +11,7 @@ from pymol import cmd
 
 # Generate possible conformer structures via Pymol
 # Use in Pymol command prompt:
-# run log.py
+# run wSterimol.py
 # run setup.py
 # run generate.py
 # generate [dihedral 1, .. ], (directory, setup_path, verbose, force)

@@ -13,13 +13,11 @@ from pymol import cmd
 
 # Filter optimised structures generated from Mopac or Gaussian
 # Use in Pymol command prompt:
-# run log.py
+# run wSterimol.py
 # run sterimoltools.py
 # run setup.py
 # run filter_opt.py
 # filter_opt (directory, verbose, setup_path)
-# example:
-
 
 def filter_opt(directory = "temp", setup_path = "default", verbose = "False"):
     # If the directory exists
