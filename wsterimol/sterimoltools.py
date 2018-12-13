@@ -359,8 +359,12 @@ class getoutData:
                 if hasattr(self, "NATOMS"):
                     for i in range (standor,standor+self.NATOMS):
                         outlines[i] = outlines[i].replace("*", " ")
-                        #self.ATOMTYPES.append((outlines[i].split()[3]))
-                        self.ATOMTYPES.append(filter(lambda x: x.isalpha(), outlines[i].split()[3]))
+                        s = outlines[i].split()[3]
+                        atom = ''.join([j for j in s if not j.isdigit()]).strip()
+                        print(outlines[i].split())
+                        print(atom)
+                        self.ATOMTYPES.append(atom) # ''.join([i for i in s if not i.isdigit()])
+                        #self.ATOMTYPES.append(filter(lambda x: x.isalpha(), outlines[i].split()[3]))
                         #print(outlines[i])
                         self.CARTESIANS.append([float(outlines[i].split()[-3]), float(outlines[i].split()[-2]), float(outlines[i].split()[-1])])
 
