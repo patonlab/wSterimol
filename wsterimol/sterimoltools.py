@@ -480,12 +480,12 @@ def twod_rot(vect,theta):
 def generate_atom_types(atomtype, cn):
    st_types = []
    for i in range(0,len(atomtype)):
-      atom = atomtype[i]
+      atom = atomtype[i].upper()
       if atom == "H": st_types.append("H")
       elif atom == "P": st_types.append("P")
       elif atom == "F": st_types.append("F")
-      elif atom == "Cl": st_types.append("C1")
-      elif atom == "Br": st_types.append("B1")
+      elif atom == "CL": st_types.append("C1")
+      elif atom == "BR": st_types.append("B1")
       elif atom == "I": st_types.append("I")
       elif atom == "O": #Sterimol distinguishes between "normal", and double-bonded O atoms
          if cn[i] < 1.5: st_types.append("O2")
@@ -502,6 +502,8 @@ def generate_atom_types(atomtype, cn):
          if 3.5 > cn[i] > 2.5: # need to differentiate between sp2 carbon and aromatic carbon ...
             st_types.append("C6/N6") # assumes aromatic rather than sp2
          if cn[i] > 3.5: st_types.append("C")
+      else:
+        sys.exit("FATAL ERROR: An ATOM is not supported by the CPK model! [%s]" % atom) 
    return st_types
 
 
