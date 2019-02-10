@@ -124,7 +124,7 @@ def optimisation(directory = "temp", walltime = 300, verbose = "False", setup_pa
                     log.finalize()
                     return True
                 else:
-                    log.write("Error: Wanted software is not compatible with this energy calculation script. Use another software independently. [%s]" % setup.software)
+                    log.write("Error: Wanted software is not compatible with this energy calculation script. Use another software independently then use the next scripts manually. [%s]" % setup.software)
                     return False
             else:
                 log.write("Error: Failed to load setup.ini in [%s]. Fix it to continue." % setup_path)

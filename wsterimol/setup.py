@@ -51,6 +51,7 @@ class Setup:
                 if len(config) == 2: #if not, we ignore. It is an empty config value or a commentline
                     for i in range(len(config)):
                         config[i] = config[i].strip(' ').strip('\n').strip('\t')
+                    config[0] = config[0].upper()
                     if config[0] == "PROG_EXEC":
                         if exe != "default": #define a new value for exe
                             if os.path.exists(exe):
@@ -100,7 +101,7 @@ class Setup:
                             self.spin = int(config[1])
                         else:
                             log.write("Warning: SPIN value is not a number [%s]. Default value is 1. [bool - %s] " % (config[1], self.number(config[1])))
-                    elif config[0] == "SOFTWARE": # SOFTWARE to use to optimise
+                    elif config[0] == "SOFTWARE": # SOFTWARE to use to optimize
                         self.software = config[1].upper()
                     elif config[0] == "RJCT": # RJCT is highly important. Define how close 2 atoms can be according to their diameter.
                         if self.number(config[1]) == True:
