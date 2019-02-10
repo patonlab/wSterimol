@@ -17,10 +17,8 @@ from pymol import cmd
 def weight(setup_path = "default", verbose = "False"):
     # If files exist
     if os.path.exists("energies.txt") and os.path.exists("Sterimol.txt"):
-        log_path = "log-%s" % (datetime.date.today())
-        if os.path.exists(log_path+".pylog"):
-            print("Warning: Continuing previous log file [%s.pylog]" % log_path)
-        log = Log(log_path,"pylog")
+        #log
+        log = Log()
         log.write("\n\n########################################\n###########   W E I G H T   ############\n########################################\n\n")
         #verbose
         if verbose.lower() in ['true', '1', 't', 'y', 'yes']: verbose = True
@@ -115,7 +113,6 @@ def weight(setup_path = "default", verbose = "False"):
                     output.write("**          _    __ / __//_  __// __// _ \ /  _//  |/  // __ \ / /           **\n")
                     output.write("**         | |/|/ /_\ \   / /  / _/ / , _/_/ / / /|_/ // /_/ // /__          **\n")
                     output.write("**         |__,__//___/  /_/  /___//_/|_|/___//_/  /_/ \____//____/          **\n")
-
                     output.write("**                    W E I G H T E D   S T E R I M O L                      **\n")
                     output.write("*******************************************************************************\n")
                     output.write("* CALCULATION WITH %-30s                             *\n" % setup.software)
@@ -218,9 +215,18 @@ def weight(setup_path = "default", verbose = "False"):
                     output.close()
                     log.write("\n----------------------------\n---- Normal Termination ----\n----------------------------\n")
                     log.finalize()
-            else: log.write("Error: No data was retrieved for the weighted sterimol. Exit.")
-        else: log.write("Error: Failed to load setup.ini in [%s]. Fix it to continue." % setup_path)
-    else: print("FATAL ERROR: Files containing energies and Sterimol values don't exist")
+                    return True
+                else:
+                    return False
+            else: 
+                log.write("Error: No data was retrieved for the weighted sterimol. Exit.")
+                return False
+        else: 
+            log.write("Error: Failed to load setup.ini in [%s]. Fix it to continue." % setup_path)
+            return False
+    else: 
+        print("FATAL ERROR: Files containing energies and Sterimol values don't exist")
+        return False
 
 
 cmd.extend("weight",weight)

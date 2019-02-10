@@ -5,7 +5,6 @@ from os import listdir
 from os.path import isfile, join
 from subprocess import PIPE
 
-
 from pymol import cmd
 
 ########################################
@@ -25,10 +24,7 @@ def optimisation(directory = "temp", walltime = 300, verbose = "False", setup_pa
     # If the directory exists
     if os.path.exists(directory):
         # Log generation
-        log_path = "log-%s" % (datetime.date.today())
-        if os.path.exists(log_path+".pylog"):
-            print("Warning: Continuing previous log file [%s.pylog]" % log_path)
-        log = Log(log_path,"pylog")
+        log = Log()
         log.write("\n\n########################################\n###########   E N E R G Y   ############\n########################################\n\n")
         #verbose
         if verbose.lower() in ['true', '1', 't', 'y', 'yes']: verbose = True
@@ -85,6 +81,7 @@ def optimisation(directory = "temp", walltime = 300, verbose = "False", setup_pa
                     # terminate
                     log.write("----------------------------\n---- Normal Termination ----\n----------------------------\n")
                     log.finalize()
+                    return True
                 elif setup.software == "GAUSSIAN": # MOPAC software
                     # calculate for each file
                     for filename in files:
@@ -101,7 +98,7 @@ def optimisation(directory = "temp", walltime = 300, verbose = "False", setup_pa
                                         startupinfo = subprocess.STARTUPINFO()
                                         startupinfo.dwFlags |= subprocess.STARTF_USESTDHANDLES | subprocess.STARTF_USESHOWWINDOW
                                         startupinfo.wShowWindow = subprocess.SW_HIDE
-
+                                    # command
                                     command = setup.exe + ' ' + join(directory, filename.split(".")[0])
                                     #log.write(command)
                                     job = subprocess.call(command, stdout=PIPE, shell=True)
@@ -125,12 +122,19 @@ def optimisation(directory = "temp", walltime = 300, verbose = "False", setup_pa
                     # terminate
                     log.write("----------------------------\n---- Normal Termination ----\n----------------------------\n")
                     log.finalize()
+                    return True
                 else:
-                    log.write("Error: Wanted software is not compatible with this energy calculation script. Use another software independantly. [%s]" % setup.software)
+                    log.write("Error: Wanted software is not compatible with this energy calculation script. Use another software independently. [%s]" % setup.software)
+                    return False
             else:
                 log.write("Error: Failed to load setup.ini in [%s]. Fix it to continue." % setup_path)
-        else: log.write("Error: No file to use in the directory [%s]" % directory)
-    else: print("FATAL ERROR: Specified directory doesn't exist [%s]" % directory)
+                return False
+        else: 
+            log.write("Error: No file to use in the directory [%s]" % directory)
+            return False
+    else: 
+        print("FATAL ERROR: Specified directory doesn't exist [%s]" % directory)
+        return False
 
 
 cmd.extend("optimisation",optimisation)

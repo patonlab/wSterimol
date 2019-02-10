@@ -7,7 +7,7 @@ from datetime import timedelta
 from pymol import cmd
 
 # Weighted Sterimol Program version
-version = 1.03
+version = 1.04
 
 ########################################
 ########## w S T E R I M O L ###########
@@ -16,32 +16,35 @@ version = 1.03
 # Generate the wSterimol parameters from the optimised structures
 # Use in Pymol command prompt:
 # run wSterimol.py
-# wSterimol dihedrals, atomid1, atomid2, (radii, walltime, directory, setup_path, verbose, force)
+# wSterimol dihedrals, atomid1, atomid2, (radii, walltime, directory, setup_path, verbose)
 
-def wSterimol(dihedrals, atomid1 = 1, atomid2 = 2, directory = "temp", setup_path = '.', walltime = 300,  verbose = "False", force = False):
+def wSterimol(dihedrals, atomid1 = 1, atomid2 = 2, directory = "temp", setup_path = '.', walltime = 300,  verbose = "False"):
     # Log generation
-    log_path = "log-%s" % (datetime.date.today())
-    if os.path.exists(log_path+".pylog"):
-        print("Warning: Continuing previous log file [%s.pylog]" % log_path)
-    wlog = Log(log_path,"pylog")
+    wlog = Log()
     # Do weighted Sterimol
-    generate(dihedrals, directory, setup_path, verbose, force)
-    filter_gen(directory, setup_path, verbose)
-    prepare_file(directory, setup_path, verbose)
-    optimisation(directory, walltime, verbose, setup_path)
-    filter_opt(directory, setup_path, verbose)
-    Sterimol(atomid1, atomid2, directory, setup_path, verbose)
-    weight(setup_path, verbose)
-    wlog.write("---- wSterimol finished ----\n")
-    wlog.finalize()
+    if generate(dihedrals, directory, setup_path, verbose):
+        if filter_gen(directory, setup_path, verbose):
+            if prepare_file(directory, setup_path, verbose):
+                if optimisation(directory, walltime, verbose, setup_path):
+                    if filter_opt(directory, setup_path, verbose):
+                        if Sterimol(atomid1, atomid2, directory, setup_path, verbose):
+                            if weight(setup_path, verbose):
+                                wlog.write("---- wSterimol finished ----\n")
+                                wlog.finalize()
 cmd.extend("wSterimol",wSterimol)
 
 
 class Log:
-    def __init__(self,filein,suffix):
+    def __init__(self):
+        filein = "log"
+        suffix = "pylog"
+        try:
+            filein = "%s" % (cmd.get_object_list()[0])
+        except:
+            print("Warning: Can't properly name the .%s file." % suffix)
         # Create the log file at the input path
         self.start_time = timeit.default_timer()
-        self.log = open(filein+"."+suffix, 'a+' )
+        self.log = open(filein+"."+suffix, 'a+')
 
     # Write a message to the log and the terminal by default
     def write(self, message, verbose = True):

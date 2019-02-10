@@ -24,6 +24,8 @@ class Setup:
         self.print_cutoff = 5.0
         self.angle_count = 5
         self.radii = "cpk"
+        self.combination_limit = 15625
+        self.combination_remove_algorithm = "random"
         if path != "default":
             self.path = os.path.join(path, "setup.ini")
         else:
@@ -136,6 +138,16 @@ class Setup:
                             radii = "cpk"
                             log.write("Warning: Radii must be \"cpk\" or \"bondi\". CPK atomic model is used by default.")
                         self.radii = config[1]
+                    elif config[0] == "COMBINATION_LIMIT": # maximum of combinations the script can generate
+                        if self.number(config[1]) == True:
+                            self.combination_limit = int(config[1])
+                        else:
+                            log.write("Warning: COMBINATION_LIMIT value is not a number [%s]. Default value is %s." % (config[1], self.combination_limit))
+                    elif config[0] == "COMBINATION_ALGORITHM": # Algorithm used to eliminate the excess of allowed combinations
+                        if config[1].lower() == "random":
+                            self.combination_remove_algorithm = "random"
+                        else:
+                            log.write("Warning: COMBINATION_ALGORITHM value is not recognized [%s]. Default value is \"%s\"." % (config[1], self.combination_remove_algorithm))
                     else:
                         log.write("Warning: Unknown setting in setup.ini. Check spelling [%s]" % config[0])
         else:

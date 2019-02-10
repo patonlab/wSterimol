@@ -1,6 +1,6 @@
 #!/usr/bin/python
 from __future__ import print_function, absolute_import
-import subprocess, sys, os, math, datetime, shutil, datetime
+import subprocess, sys, os, math, shutil, datetime
 from os import listdir
 from os.path import isfile, join
 from subprocess import PIPE
@@ -23,10 +23,7 @@ def filter_opt(directory = "temp", setup_path = "default", verbose = "False"):
     # If the directory exists
     if os.path.exists(directory):
         # Log generation
-        log_path = "log-%s" % (datetime.date.today())
-        if os.path.exists(log_path+".pylog"):
-            print("Warning: Continuing previous log file [%s.pylog]" % log_path)
-        log = Log(log_path,"pylog")
+        log = Log()
         log.write("\n\n########################################\n########### F I L T E R - O ############\n########################################\n\n")
         #verbose
         if verbose.lower() in ['true', '1', 't', 'y', 'yes']: verbose = True
@@ -150,10 +147,16 @@ def filter_opt(directory = "temp", setup_path = "default", verbose = "False"):
                 output.close()
                 log.write("----------------------------\n---- Normal Termination ----\n----------------------------\n")
                 log.finalize()
+                return True
             else:
                 log.write("Error: Failed to load setup.ini in [%s]. Fix it to continue." % setup_path)
-        else: log.write("Error: No file to use in the directory [%s]" % directory)
-    else: print("FATAL ERROR: Specified directory doesn't exist [%s]" % directory)
+                return False
+        else: 
+            log.write("Error: No file to use in the directory [%s]" % directory)
+            return False
+    else: 
+        print("FATAL ERROR: Specified directory doesn't exist [%s]" % directory)
+        return False
 
 cmd.extend("filter_opt",filter_opt)
 

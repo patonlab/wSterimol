@@ -26,10 +26,7 @@ def Sterimol(atomid1 = 1, atomid2 = 2, directory = "temp", setup_path = "default
     # If the directory exists
     if os.path.exists(directory):
         # Log generation
-        log_path = "log-%s" % (datetime.date.today())
-        if os.path.exists(log_path+".pylog"):
-            print("Warning: Continuing previous log file [%s.pylog]" % log_path)
-        log = Log(log_path,"pylog")
+        log = Log()
         log.write("\n\n########################################\n########### S T E R I M O L ############\n########################################\n\n")
         # Check arguments to avoid an error later
         if verbose.lower() in ['true', '1', 't', 'y', 'yes']:
@@ -41,7 +38,7 @@ def Sterimol(atomid1 = 1, atomid2 = 2, directory = "temp", setup_path = "default
             atomid2 = int(atomid2)
         except ValueError:
             log.write("FATAL ERROR: Atom id must be an integer. In Pymol, Label (L) -> atom identifiers -> ID\n")
-            return
+            return False
         # Retrieve all the files in the directory
         files = [f for f in listdir(directory) if isfile(join(directory, f)) and (f.split(".")[-1] == "log" or f.split(".")[-1] == "out") and len(f.split(".")) > 1 ]
         if len(files) > 0:
@@ -69,7 +66,7 @@ def Sterimol(atomid1 = 1, atomid2 = 2, directory = "temp", setup_path = "default
                         file_Params = calcSterimol(join(directory, filename), setup.radii, atomid1, atomid2, verbose)
                     except ValueError:
                         log.write("FATAL ERROR: An error occured in Sterimol calculation.\n\n%s\n\n" % ValueError)
-                        return
+                        return False
                     lval = file_Params.lval; B1 = file_Params.B1; B5 = file_Params.newB5
                     message = " %-31s " % filename+" %8.2f" % lval+ " %8.2f" % B1+ " %8.2f" % B5
                     log.write(message, verbose)
@@ -77,8 +74,15 @@ def Sterimol(atomid1 = 1, atomid2 = 2, directory = "temp", setup_path = "default
                 output.close()
                 log.write("----------------------------\n---- Normal Termination ----\n----------------------------\n")
                 log.finalize()
-            else: log.write("Error: Failed to load setup.ini in [%s]. Fix it to continue." % setup_path)
-        else: log.write("Error: No file in the directory [%s]" % directory)
-    else: print("FATAL ERROR: Specified directory doesn't exist [%s]" % directory)
+                return True
+            else: 
+                log.write("Error: Failed to load setup.ini in [%s]. Fix it to continue." % setup_path)
+                return False
+        else: 
+            log.write("Error: No file in the directory [%s]" % directory)
+            return False
+    else: 
+        print("FATAL ERROR: Specified directory doesn't exist [%s]" % directory)
+        return False
 
 cmd.extend("sterimol",Sterimol)

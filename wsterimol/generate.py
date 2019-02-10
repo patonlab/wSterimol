@@ -14,20 +14,19 @@ from pymol import cmd
 # run wSterimol.py
 # run setup.py
 # run generate.py
-# generate [dihedral 1, .. ], (directory, setup_path, verbose, force)
+# generate [dihedral 1, .. ], (directory, setup_path, verbose)
 # example: generate [[id 1, id 2, id 3, id 6],[id 2, id 3, id 6, id 11]], conformers
 
-def generate(dihedrals, directory = "temp", setup_path = "default", verbose = "False", force = False):
+def generate(dihedrals, directory = "temp", setup_path = "default", verbose = "False"):
     # dihedrals = [[atom a, atom b, atom c, atom d]]
     # Log generation
-    log_path = "log-%s" % (datetime.date.today())
-    if os.path.exists(log_path+".pylog"):
-        print("Warning: Continuing previous log file [%s.pylog]" % log_path)
-    log = Log(log_path,"pylog")
+    log = Log()
     log.write("\n\n########################################\n########### G E N E R A T E ############\n########################################\n\n")
     #verbose
     if verbose.lower() in ['true', '1', 't', 'y', 'yes']: verbose = True
     else: verbose = False
+    # dihedrals: auto?
+    if dihedrals.lower() in ['auto']: dihedrals = 'auto' #To DO: generate dihedrals automatically
     # get setup.ini
     setup = Setup(log, setup_path)
     if setup.isLoaded() == True:
@@ -37,50 +36,61 @@ def generate(dihedrals, directory = "temp", setup_path = "default", verbose = "F
             dihedrals[i]=dihedrals[i].strip(' []')
         if len(dihedrals)%4 != 0 and len(dihedrals) != 1:
             log.write("Error: Problem in dihedral selection. 4 selections are needed for each dihedral. [%s] " % dihedrals)
-            return
+            return False
         dihedral_count=int(len(dihedrals)/4)
-        conbinations=int(setup.angle_count**dihedral_count)
+        combination_count=int(setup.angle_count**dihedral_count)
         log.write("Number of dihedrals: %s" % dihedral_count)
         log.write("For each dihedral: %s steps of %s degree" % (setup.angle_count, angle_step))
-        log.write("That represents %s combinations" % conbinations)
-        if conbinations >= 1000:
-            log.write("You are about to generate %s files. The calculation has been canceled.\nForce the system if you want to continue:\ngenerate [dihedral 1, .. ], (directory, setup_path, verbose, force)" % conbinations)
-            if not force:
-                return
-            else: log.write("You are about to generate %s files. System has been forced to continue the calculation." % conbinations)
+        log.write("That represents %s combinations" % combination_count)
         result = backup_generate(directory) # create backup
         if result: log.write("Making archives: %s" % result, verbose)
         else: log.write("Making directory: %s" % directory, verbose)
-        if conbinations == 0:
+        if combination_count == 0:
             path = "%s/%s_0.pdb" % (directory, cmd.get_object_list()[0])
             try:
                 cmd.save(path)
             except:
                 log.write("Error: Can't save %s first conformer. One conformer will be missing!" % path, verbose)
         else:
-            for i in range(0,conbinations): # iterate all the combinations of dihedrals
+            # Generate all the combinations
+            combination_list = [{} for k in range(0,combination_count)]
+            for i in range(0,combination_count): # iterate all the combinations of dihedrals
                 dihedrals_curr_cbn=[{} for k in range(dihedral_count)]
-                if i >= 0:
-                    count = i
-                    for j in range(0,dihedral_count): # modify the dihedral according to the conbination
-                        dihedrals_curr_cbn[j]=int(count%setup.angle_count)
-                        count=int(count/setup.angle_count)
-                        try:
-                            cmd.set_dihedral(dihedrals[j*4],dihedrals[j*4+1],dihedrals[j*4+2],dihedrals[j*4+3],dihedrals_curr_cbn[j]*angle_step)
-                        except:
-                            log.write("Error: Can't set the dihedrals. cmd.set_dihedrals failed.")
+                count = i
+                for j in range(0,dihedral_count): # modify the dihedral according to the combination
+                    dihedrals_curr_cbn[j]=int(count%setup.angle_count)
+                    count=int(count/setup.angle_count)
                 log.write("Combination %s : %s " % (i,dihedrals_curr_cbn), verbose)
+                combination_list[i] = dihedrals_curr_cbn
+            # Too many combinations?
+            if combination_count > setup.combination_limit:
+                todestroy_count = combination_count - setup.combination_limit
+                log.write("The amount of possibility is %s. The limit is set at %s. %s combinations will be deleted to go down to the limit using %s algorithm." % (combination_count, setup.combination_limit, todestroy_count, setup.combination_remove_algorithm))
+                if setup.combination_remove_algorithm == "random":
+                    for i in range(0, todestroy_count): # loop as many time as the amount to randomly destroy
+                        del combination_list[random.randint(0, len(combination_list))]
+                log.write("%s combinations. Limit is %s. Reduction of combinations done." % (len(combination_list), setup.combination_limit), verbose)
+            # Generate the files
+            for i in range(len(combination_list)): # going through each combination
+                for j in range(len(combination_list[i])): # going through each dihedral of the combination
+                    try:
+                        cmd.set_dihedral(dihedrals[j*4],dihedrals[j*4+1],dihedrals[j*4+2],dihedrals[j*4+3],combination_list[i][j]*angle_step)
+                    except:
+                        log.write("Error: Can't set the dihedrals. cmd.set_dihedrals failed.")
+                log.write("Writing Combination %s : %s " % (i,combination_list[i]), verbose)
                 path = "%s/%s_%s.pdb" % (directory, cmd.get_object_list()[0], str(i))
                 try:
                     cmd.save(path)
                 except:
                     log.write("Error: Can't save %s. One conformer will be missing!" % path)
-                if i >= 0: # undo the dihedrals change for each dihedral before doing the next combination
-                    for j in range(0,dihedral_count):
-                        cmd.undo()
+                for j in range(0,dihedral_count):
+                    cmd.undo()
         log.write("----------------------------\n---- Normal Termination ----\n----------------------------\n")
         log.finalize()
-    else: log.write("Error: Failed to load setup.ini in [%s]. Fix it to continue." % setup_path)
+        return True
+    else: 
+        log.write("Error: Failed to load setup.ini in [%s]. Fix it to continue." % setup_path)
+        return False
 
 def backup_generate(path):
     new_path = "%s/%s" % (path, datetime.date.today())  # archive directory

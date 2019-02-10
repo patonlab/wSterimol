@@ -361,8 +361,8 @@ class getoutData:
                         outlines[i] = outlines[i].replace("*", " ")
                         s = outlines[i].split()[3]
                         atom = ''.join([j for j in s if not j.isdigit()]).strip()
-                        print(outlines[i].split())
-                        print(atom)
+                        #print(outlines[i].split())
+                        #print(atom)
                         self.ATOMTYPES.append(atom) # ''.join([i for i in s if not i.isdigit()])
                         #self.ATOMTYPES.append(filter(lambda x: x.isalpha(), outlines[i].split()[3]))
                         #print(outlines[i])
@@ -572,7 +572,6 @@ class calcSterimol:
       vect1=np.subtract(getcoords(atomA,molcart),next_atom)
       if verbose == True:
           print("   Atoms", atomA, "and", atomB, "define the L-axis and direction", vect1)
-
           print("\n", "   Atom ".ljust(9), "  Xco/A".rjust(9), "  Yco/A".rjust(9), "  Zco/A".rjust(9), " VdW/pm".rjust(9))
           print("   ##############################################")
       # Remove the base atom from the list of atoms to be considered for sterics (after printing all)
