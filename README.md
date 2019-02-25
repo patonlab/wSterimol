@@ -13,7 +13,7 @@ wSterimol is an automated computational workflow which computes multidimensional
 
 All code is written in Python and was developed by [Alexandre Brethomé](http://www.oxfordsynthesiscdt.ox.ac.uk/people/students/2015cohort.html) at the University of Oxford and [Robert Paton](http://wwww.patonlab.com) at Colorado State University. The underlying python implementation of Sterimol parameters was written by Kelvin Jackson and Robert Paton and is available as a [command-line tool](https://github.com/bobbypaton/Sterimol)
 
-*Conformational Effects on Physical-Organic Descriptors – the Case of Sterimol Steric Parameters* Brethomé, A. V.; Fletcher, S. P.; Paton, R. S. *ACS Catalysis* **2019** [**DOI:** 10.1021/acscatal.8b04043](http://dx.doi.org/10.1021/acscatal.8b04043)
+*Conformational Effects on Physical-Organic Descriptors – the Case of Sterimol Steric Parameters* Brethomé, A. V.; Fletcher, S. P.; Paton, R. S. *ACS Catalysis* **2019**, *9*, 2313-2323 [**DOI:** 10.1021/acscatal.8b04043](http://dx.doi.org/10.1021/acscatal.8b04043)
 
 ## Getting Started
 
@@ -203,7 +203,7 @@ We acknowledge the [EPSRC Centre for Doctoral Training in Synthesis for Biology 
 ## Citation
 
 This code is released under the MIT license. Commercial use, Modification, Distribution and Private use are all permitted. The use of wSterimol can be acknowledged with the following citation:
-*Conformational Effects on Physical-Organic Descriptors – the Case of Sterimol Steric Parameters* Brethomé, A. V.; Fletcher, S. P.; Paton, R. S. *ACS Catalysis* **2019** [**DOI:** 10.1021/acscatal.8b04043](http://dx.doi.org/10.1021/acscatal.8b04043)
+*Conformational Effects on Physical-Organic Descriptors – the Case of Sterimol Steric Parameters* Brethomé, A. V.; Fletcher, S. P.; Paton, R. S. *ACS Catalysis* **2019**, *9*, 2313-2323 [**DOI:** 10.1021/acscatal.8b04043](http://dx.doi.org/10.1021/acscatal.8b04043)
 
 The python implementation of Sterimol parameters was first reported in:
 *Correlating Reactivity and Selectivity to Cyclopentadienyl Ligand Properties in Rh(III)-Catalyzed C-H Activation Reactions: an Experimental and Computational Study* Piou, T.; Romanov-Michailidis, F.; Romanova-Michaelides, T.; Jackson, K. E.; Semakul, N.; Taggart, T. D.; Newell, B S.; Rithner, C. D.; Paton, R. S.; Rovis, T. *J. Am. Chem. Soc.* **2017** *139*, 1296–1310 [DOI: 10.1021/jacs.6b11670](http://dx.doi.org/10.1021/jacs.6b11670)
