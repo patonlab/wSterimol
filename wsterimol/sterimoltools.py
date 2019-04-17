@@ -160,7 +160,7 @@ class getinData:
                             mminfo = inlines[i].split()[0].lstrip(atominfo)
                             self.MMTYPES.append(mminfo)
 
-                        self.ATOMTYPES.append(atominfo)
+                        self.ATOMTYPES.append(atominfo.lower().capitalize())
                         level = ""
                         for oniomlevel in ["H", "M", "L"]:
                             if inlines[i][4:].rfind(oniomlevel)>1:
@@ -170,9 +170,9 @@ class getinData:
                 self.ATOMTYPES = []
                 for i in range(0,len(inlines)):
                     if inlines[i].find("ATOM") > -1:
-                       self.ATOMTYPES.append(int(inlines[i].split()[1]))
+                       self.ATOMTYPES.append(elementID(int(inlines[i].split()[1])))
                     if inlines[i].find("HETATM")>-1:
-                       self.ATOMTYPES.append(inlines[i].split()[-1])
+                       self.ATOMTYPES.append(inlines[i].split()[-1].lower().capitalize())
 
         def getCONNECTIVITY(self, inlines, natoms):
             if fileformat == "com":
@@ -363,7 +363,7 @@ class getoutData:
                         atom = ''.join([j for j in s if not j.isdigit()]).strip()
                         #print(outlines[i].split())
                         #print(atom)
-                        self.ATOMTYPES.append(atom) # ''.join([i for i in s if not i.isdigit()])
+                        self.ATOMTYPES.append(atom.lower().capitalize()) # ''.join([i for i in s if not i.isdigit()])
                         #self.ATOMTYPES.append(filter(lambda x: x.isalpha(), outlines[i].split()[3]))
                         #print(outlines[i])
                         self.CARTESIANS.append([float(outlines[i].split()[-3]), float(outlines[i].split()[-2]), float(outlines[i].split()[-1])])
@@ -563,7 +563,7 @@ class calcSterimol:
                if sterimol_types[i] == sterimol_atomtypes[j]: vdw_radii.append(cpk_radii[j]/100.00)
 
       if radii == "bondi":
-         for i in range(0,natoms): vdw_radii.append(bondiRadius(periodictable.index(fileData.ATOMTYPES[i])))
+         for i in range(0,natoms): vdw_radii.append(bondiRadius(periodictable.index(fileData.ATOMTYPES[i].lower().capitalize())))
 
 # Define vector along the L-axis connecting base atom and the next attached atom
 # subtract one since the array starts from zero not one

@@ -216,7 +216,7 @@ def atomicnumber(element):
                      "Pb","Bi","Po","At","Rn","Fr","Ra","Ac","Th","Pa","U","Np","Pu","Am","Cm","Bk","Cf","Es","Fm","Md","No","Lr","Rf","Db","Sg","Bh","Hs","Mt","Ds","Rg","Uub","Uut","Uuq","Uup","Uuh","Uus","Uuo"]
     
     for i in range(0,len(periodictable)):
-        if element == periodictable[i]: return i
+        if element.lower().capitalize() == periodictable[i].lower().capitalize(): return i
 
 def accepted_file(file):
     filesplit = file.split(".")
