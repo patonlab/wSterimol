@@ -90,7 +90,7 @@ ENERGYWINDOW_CUTOFF = 1.0 3.0 5.0
 PRINT_CUTOFF = 5.0
 ```
 
-Most of these options are self-explanatory. We are using Mopac as the external program using the PM6-D3H4 level of theory to optimize geometries, for a molecule which has no charge and is closed-shell. The RMSD value is used to decide whether two conformers are distinct and the angle count is how the dihedral angles are searched. The Sterimol parameters will be computed using CPK atomic radii, and will be Boltzmann-average using the PM6-D3H4 energies at 298K. The full path of the program needs to match where this is installed on your machine: the locations shown are the defaults for OSX and Windows. These scripts can be commented using # symbols at the start of the line.
+Most of these options are self-explanatory. We are using Mopac as the external program using the PM6-D3H4 level of theory to optimize geometries, for a molecule which has no charge and is closed-shell. The RMSD value is used to decide whether two conformers are distinct and the angle count is how the dihedral angles are searched. The Sterimol parameters will be computed using CPK atomic radii in this example (but Bondi should be preferred, see #Best Practices), and will be Boltzmann-average using the PM6-D3H4 energies at 298K. The full path of the program needs to match where this is installed on your machine: the locations shown are the defaults for OSX and Windows. These scripts can be commented using # symbols at the start of the line.
 
 Now it should be possible to load the structure file (again typing in the PyMol console)
 
@@ -98,9 +98,9 @@ Now it should be possible to load the structure file (again typing in the PyMol 
 load pentane.pdb
 ```
 
-Since we wish to obtain Sterimol parameters for the n-butyl substituent, it is necessary to have it attached to something: by using n-pentane, we have the n-butyl group attached to a methyl carbon atom. The length is measured from this carbon.
+Since we wish to obtain Sterimol parameters for the n-butyl substituent, it is necessary to have it attached to something: by using n-pentane, we have the n-butyl group attached to a methyl carbon atom (see #Best Practices). The length is measured from this carbon.
 
-It is useful to see the atom-numbering, to define which bonds are rotatable. Type:
+It is useful to see the atom-numbering (see #Best Practices), to define which bonds are rotatable. Type:
 
 ```
 BallnStick pentane
@@ -120,7 +120,7 @@ The following command in Pymol will perform the entire series of calculations an
 wSterimol [[id 1, id 3, id 4, id 5],[id 3, id 4, id 5, id 2]], 1, 3
 ```
 
-The different scripts will be called one after another. If there is an error, it will show up immediately. Note that the atom selections in dihedrals must be bonded for the script to work. Use the 'bond' keyword if that is not the case. When the calculation is finished, “wSterimol finished” message should appear. In your working folder, two new files and one folder should have appeared as well. “temp” folder contains all the conformers in PDB format. “weighted.txt” contains the wSterimol values. The (abbreviated) output in "weighted.txt" shows the following:
+The different scripts will be called one after another. If there is an error, it will show up immediately. Note that the atom selections in dihedrals must be bonded for the script to work. Use the 'bond' keyword if that is not the case (see Pymol documentation). When the calculation is finished, “wSterimol finished” message should appear. In your working folder, two new files and one folder should have appeared as well. “temp” folder contains all the conformers in PDB format. “weighted.txt” contains the wSterimol values. The (abbreviated) output in "weighted.txt" shows the following:
 
 ```
 Structures                   E (kcal/mol)  L1 (A)  B1 (A)  B5 (A)    (%)
@@ -195,6 +195,17 @@ pentane_10.out                       0.48    6.29    1.90    4.10  12.22
 ```
 
 The Sterimol parameters for the most stable conformer (pentane_18, trans-trans) are: L1 = 7.39, B1 = 1.67, B5 = 2.74. These all differ by < 0.05Å when compared with the earlier semi-empirical values, since both sets of calculations predict the same conformation to be most stable. The weighted values do show more variation though, as one might expect, since these depend on the relative conformer energies which are generally more method-dependent than the structures themselves. So we see that the DFT results produce a shorter weighted L1 by 0.4Å and a wider B5 by 0.2Å, as this level of theory predicts that the population of the long-and-narrow trans,trans-conformer is smaller (27 vs 35%).
+
+### Best practices
+
+* **Recommended use of Bondi over CPK.** Even though CPK atomic model is used in the examples, Bondi atomic model should be preferred. CPK values are limited to the elements H, C, N, O, F, P, S, Cl, Br, and I whereas Bondi values have a wider coverage of the periodic table and are based on crystallographic data. In your setup.ini file, modify your ATOMIC_MODEL keyword.
+
+```
+ATOMIC_MODEL = bondi
+```
+
+* **Recommended use of Me for the attachment atom of the primary bond.** As shown in the example, we decided to have the n-butyl group attached to a methyl carbon atom, thus giving the n-pentane molecule. As it is just a model, the n-butyl group can theoretically be attached to anything (Me, H, or full structure) as long as the final molecule can be optimized. The use of H instead of Me is however problematic for the conformational sampling for two reasons: First, H of the primary bond is identical to 2 other H on the same carbon, thus creating a false symmetry. Second, potential steric clashes with the attachment point are underestimated and can lead to unrealistic ensemble.
+
 
 ## Acknowledgements
 
