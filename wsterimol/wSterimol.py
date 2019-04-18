@@ -7,7 +7,7 @@ from datetime import timedelta
 from pymol import cmd
 
 # Weighted Sterimol Program version
-version = 1.04
+version = 1.05
 
 ########################################
 ########## w S T E R I M O L ###########
@@ -18,7 +18,7 @@ version = 1.04
 # run wSterimol.py
 # wSterimol dihedrals, atomid1, atomid2, (radii, walltime, directory, setup_path, verbose)
 
-def wSterimol(dihedrals, atomid1 = 1, atomid2 = 2, directory = "temp", setup_path = '.', walltime = 300,  verbose = "False"):
+def wSterimol(dihedrals, atomid1 = "id 1", atomid2 = "id 2", directory = "temp", setup_path = '.', walltime = 300,  verbose = "False"):
     # Log generation
     wlog = Log()
     # Do weighted Sterimol

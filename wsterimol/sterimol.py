@@ -22,7 +22,7 @@ from pymol import cmd
 # run sterimol.py
 # sterimol atomid1, atomid2, (directory, setup_path, verbose)
 
-def Sterimol(atomid1 = 1, atomid2 = 2, directory = "temp", setup_path = "default", verbose = "False"):
+def Sterimol(atomid1 = "id 1", atomid2 = "id 2", directory = "temp", setup_path = "default", verbose = "False"):
     # If the directory exists
     if os.path.exists(directory):
         # Log generation
@@ -34,10 +34,10 @@ def Sterimol(atomid1 = 1, atomid2 = 2, directory = "temp", setup_path = "default
         else:
             verbose = False
         try:
-            atomid1 = int(atomid1) # in Pymol, arguments are strings by default. Convert to int and check that is right.
-            atomid2 = int(atomid2)
+            atomid1 = int(atomid1.strip().strip('id '))
+            atomid2 = int(atomid2.strip().strip('id '))
         except ValueError:
-            log.write("FATAL ERROR: Atom id must be an integer. In Pymol, Label (L) -> atom identifiers -> ID\n")
+            log.write("FATAL ERROR: An atom ID must be provided for the primary bond. Correct syntax is\n Sterimol id 1, id 2\n You provided atomid1 = %s and atomid2 = %s." % (atomid1, atomid2))
             return False
         # Retrieve all the files in the directory
         files = [f for f in listdir(directory) if isfile(join(directory, f)) and (f.split(".")[-1] == "log" or f.split(".")[-1] == "out") and len(f.split(".")) > 1 ]

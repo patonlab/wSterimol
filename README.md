@@ -117,7 +117,7 @@ This structure has not been optmized. It is now necessary to generate different 
 The following command in Pymol will perform the entire series of calculations and analysis:
 
 ```
-wSterimol [[id 1, id 3, id 4, id 5],[id 3, id 4, id 5, id 2]], 1, 3
+wSterimol [[id 1, id 3, id 4, id 5],[id 3, id 4, id 5, id 2]], id 1, id 3
 ```
 
 The different scripts will be called one after another. If there is an error, it will show up immediately. Note that the atom selections in dihedrals must be bonded for the script to work. Use the 'bond' keyword if that is not the case (see Pymol documentation). When the calculation is finished, “wSterimol finished” message should appear. In your working folder, two new files and one folder should have appeared as well. “temp” folder contains all the conformers in PDB format. “weighted.txt” contains the wSterimol values. The (abbreviated) output in "weighted.txt" shows the following:
@@ -175,7 +175,7 @@ Following the same protocol as before, but making sure that the PyMol working di
 ```
 cd /Documents/wSterimol/example_gaussian/
 load pentane.pdb
-wSterimol [[id 1, id 3, id 4, id 5],[id 3, id 4, id 5, id 2]], 1, 3
+wSterimol [[id 1, id 3, id 4, id 5],[id 3, id 4, id 5, id 2]], id 1, id 3
 ```
 
 Results in the following output in 'weighted.txt'
