@@ -205,9 +205,9 @@ def export_pdb(directory, file, Molspec):
     if os.path.exists(full_file_name):
         os.remove(full_file_name)  # remove file
     file = open(full_file_name, 'w' )
-    file.write("REMARK   1 File created by energy.py\n")
+    file.write("REMARK   1 File created by filter_opt.py\n")
     for i in range(len(Molspec.CARTESIANS)):
-        message = "HETATM %4.f  %s           0     % 7.3f % 7.3f % 7.3f                       %s\n" % (i+1, Molspec.ATOMTYPES[i], Molspec.CARTESIANS[i][0], Molspec.CARTESIANS[i][1], Molspec.CARTESIANS[i][2], Molspec.ATOMTYPES[i])
+        message = "HETATM %4.f  %-3s         0     % 7.3f % 7.3f % 7.3f                      %-2s\n" % (i+1, Molspec.ATOMTYPES[i], Molspec.CARTESIANS[i][0], Molspec.CARTESIANS[i][1], Molspec.CARTESIANS[i][2], Molspec.ATOMTYPES[i])
         file.write(message)
     file.write("END\n")
     file.close()

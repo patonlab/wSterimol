@@ -48,6 +48,7 @@ def generate(dihedrals, directory = "temp", setup_path = "default", verbose = "F
         if combination_count == 0:
             path = "%s/%s_0.pdb" % (directory, cmd.get_object_list()[0])
             try:
+                cmd.set("retain_order",1)
                 cmd.save(path)
             except:
                 log.write("Error: Can't save %s first conformer. One conformer will be missing!" % path, verbose)
@@ -80,6 +81,7 @@ def generate(dihedrals, directory = "temp", setup_path = "default", verbose = "F
                 log.write("Writing Combination %s : %s " % (i,combination_list[i]), verbose)
                 path = "%s/%s_%s.pdb" % (directory, cmd.get_object_list()[0], str(i))
                 try:
+                    cmd.set("retain_order",1)
                     cmd.save(path)
                 except:
                     log.write("Error: Can't save %s. One conformer will be missing!" % path)
