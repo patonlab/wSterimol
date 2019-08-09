@@ -5,7 +5,6 @@
          |__,__//___/  /_/  /___//_/|_|/___//_/  /_/ \____//____/          
                     W E I G H T E D   S T E R I M O L                      
 ```
-===
 
 [![DOI](https://zenodo.org/badge/143098770.svg)](https://zenodo.org/badge/latestdoi/143098770)
 
