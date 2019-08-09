@@ -5,10 +5,11 @@
          |__,__//___/  /_/  /___//_/|_|/___//_/  /_/ \____//____/          
                     W E I G H T E D   S T E R I M O L                      
 ```
-
-wSterimol is an automated computational workflow which computes multidimensional [Sterimol](http://doi.org/10.1021/bk-1984-0255.ch016) parameters. For flexible molecules or substituents, the program will generate & optimize a conformational ensemble, and produce Boltzmann-weighted Sterimol parameters. It has been developed as a [PyMol](https://pymol.org/2) plugin.
+===
 
 [![DOI](https://zenodo.org/badge/143098770.svg)](https://zenodo.org/badge/latestdoi/143098770)
+
+wSterimol is an automated computational workflow which computes multidimensional [Sterimol](http://doi.org/10.1021/bk-1984-0255.ch016) parameters. For flexible molecules or substituents, the program will generate & optimize a conformational ensemble, and produce Boltzmann-weighted Sterimol parameters. It has been developed as a [PyMol](https://pymol.org/2) plugin.
 
 All code is written in Python and was developed by [Alexandre Brethomé](http://www.oxfordsynthesiscdt.ox.ac.uk/people/students/2015cohort.html) at the University of Oxford and [Robert Paton](http://wwww.patonlab.com) at Colorado State University. The underlying python implementation of Sterimol parameters was written by Kelvin Jackson and Robert Paton and is available as a [command-line tool](https://github.com/bobbypaton/Sterimol)
 
