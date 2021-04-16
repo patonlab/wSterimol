@@ -546,123 +546,170 @@ def linearcheck(carts):
    return ans
 
 class calcSterimol:
-   def __init__(self, file, radii, atomA, atomB,verbose):
+   def __init__(self, file, radii, atomA, atomB, verbose, classic):
+      if not classic:
+          try:
+              import dbstep.Dbstep as db
+          except ModuleNotFoundError as e:
+              print(e)
+              print("The DBSTEP Python package is used as the default method to compute Sterimol parameters for this package and can be found at https://www.github.com/bobbypaton/DBSTEP")
+              print("The package can be installed into PyMOL using the following lines in the PyMOL console:\n")
+              print(">import pip")
+              print(">pip.main(['install', 'dbstep'])")
+              print("\nThe previous method to compute Sterimol parameters can be invoked by calling 'wSterimol' with the 'classic=True' argument.")
+              self.lval = None
+              self.B1 = None
+              self.newB5 = None
+              return
+          #calc sterimol with DBSTEP
+          sterics = db.dbstep(file,atom1=atomA,atom2=atomB,verbose=verbose,sterimol=True,measure='classic',commandline=True,quiet=True)
+          self.lval = sterics.L
+          self.B1 = sterics.Bmin
+          self.newB5 = sterics.Bmax
+      else:
+          if len(file.split(".com"))>1 or len(file.split(".gjf"))>1: 
+              fileData = getinData(file)
+          if len(file.split(".out"))>1 or len(file.split(".log"))>1: 
+              fileData = getoutData(file)
 
-      if len(file.split(".com"))>1 or len(file.split(".gjf"))>1: fileData = getinData(file)
-      if len(file.split(".out"))>1 or len(file.split(".log"))>1: fileData = getoutData(file)
+          # initialize the array of atomic vdw radii
+          molcart = fileData.CARTESIANS; 
+          atomtype = fileData.ATOMTYPES; 
+          natoms = len(molcart); vdw_radii = []
 
-      # initialize the array of atomic vdw radii
-      molcart = fileData.CARTESIANS; atomtype = fileData.ATOMTYPES; natoms = len(molcart); vdw_radii = []
+          if radii == "cpk":
+             atomic_co_no = ncoord(natoms, rcov, atomtype, molcart)
+             sterimol_types = generate_atom_types(atomtype, atomic_co_no)
+             #print sterimol_types
+             for i in range(0,natoms):
+                for j in range(0,len(sterimol_atomtypes)):
+                   if sterimol_types[i] == sterimol_atomtypes[j]: 
+                       vdw_radii.append(cpk_radii[j]/100.00)
 
-      if radii == "cpk":
-         atomic_co_no = ncoord(natoms, rcov, atomtype, molcart)
-         sterimol_types = generate_atom_types(atomtype, atomic_co_no)
-         #print sterimol_types
-         for i in range(0,natoms):
-            for j in range(0,len(sterimol_atomtypes)):
-               if sterimol_types[i] == sterimol_atomtypes[j]: vdw_radii.append(cpk_radii[j]/100.00)
+          if radii == "bondi":
+             for i in range(0,natoms): 
+                 vdw_radii.append(bondiRadius(periodictable.index(fileData.ATOMTYPES[i].lower().capitalize())))
 
-      if radii == "bondi":
-         for i in range(0,natoms): vdw_radii.append(bondiRadius(periodictable.index(fileData.ATOMTYPES[i].lower().capitalize())))
+            # Define vector along the L-axis connecting base atom and the next attached atom
+            # subtract one since the array starts from zero not one
+          atomA = atomA - 1; atomB = atomB - 1
+          next_atom = molcart[atomB]
+          vect1=np.subtract(getcoords(atomA,molcart),next_atom)
+          if verbose == True:
+              print("   Atoms", atomA, "and", atomB, "define the L-axis and direction", vect1)
+              print("\n", "   Atom ".ljust(9), "  Xco/A".rjust(9), "  Yco/A".rjust(9), "  Zco/A".rjust(9), " VdW/pm".rjust(9))
+              print("   ##############################################")
+          # Remove the base atom from the list of atoms to be considered for sterics (after printing all)
+          atomlist = list(range(0,natoms))
+          if verbose == True:
+              for atom in atomlist:
+                 if radii == "cpk": 
+                     print("  ", sterimol_types[atom].ljust(6), end=' ')
+                 if radii == "bondi": 
+                     print("  ", atomtype[atom].ljust(6), end=' ')
+                 for coord in molcart[atom]:
+                    if coord < 0.0: 
+                        print("   %.3f".rjust(6) % coord, end=' ')
+                    else: 
+                        print("    %.3f".rjust(6) % coord, end=' ')
+                 print("    %.1f" % round(vdw_radii[atom]*100))
+          atomlist.remove(atomA)
+    
+          adjlist=[]; opplist=[]; theta=[]
+          for i in atomlist:
+             vect2=np.subtract(getcoords(atomA,molcart),getcoords(i,molcart))
+             oppdist=calcopposite(atomA,i,angle(vect1,vect2),molcart)
+             opplist.append(oppdist+vdw_radii[i])
+             adjdist=calcadj(atomA,i,angle(vect1,vect2),molcart)
+             #minadjlist.append(adjdist-vdw_radii[i])
+             adjlist.append(adjdist+vdw_radii[i])
 
-# Define vector along the L-axis connecting base atom and the next attached atom
-# subtract one since the array starts from zero not one
-      atomA = atomA - 1; atomB = atomB - 1
-      next_atom = molcart[atomB]
-      vect1=np.subtract(getcoords(atomA,molcart),next_atom)
-      if verbose == True:
-          print("   Atoms", atomA, "and", atomB, "define the L-axis and direction", vect1)
-          print("\n", "   Atom ".ljust(9), "  Xco/A".rjust(9), "  Yco/A".rjust(9), "  Zco/A".rjust(9), " VdW/pm".rjust(9))
-          print("   ##############################################")
-      # Remove the base atom from the list of atoms to be considered for sterics (after printing all)
-      atomlist = list(range(0,natoms))
-      if verbose == True:
-          for atom in atomlist:
-             if radii == "cpk": print("  ", sterimol_types[atom].ljust(6), end=' ')
-             if radii == "bondi": print("  ", atomtype[atom].ljust(6), end=' ')
-             for coord in molcart[atom]:
-                if coord < 0.0: print("   %.3f".rjust(6) % coord, end=' ')
-                else: print("    %.3f".rjust(6) % coord, end=' ')
-             print("    %.1f" % round(vdw_radii[atom]*100))
-      atomlist.remove(atomA)
+          B5=max(opplist)
+           #self.lval=max(adjlist)-minval
+           # A bit weird, but seems like original sterimol adds on the difference between the bond length and vdw radius of atom B. For a C-H bond this is 1.50 - 1.10 = 0.40 Angstrom)
+     
+          self.lval=max(adjlist)+0.40
 
-      adjlist=[]; opplist=[]; theta=[]
-      for i in atomlist:
-         vect2=np.subtract(getcoords(atomA,molcart),getcoords(i,molcart))
-         oppdist=calcopposite(atomA,i,angle(vect1,vect2),molcart)
-         opplist.append(oppdist+vdw_radii[i])
-         adjdist=calcadj(atomA,i,angle(vect1,vect2),molcart)
-         #minadjlist.append(adjdist-vdw_radii[i])
-         adjlist.append(adjdist+vdw_radii[i])
+          ###Useful - do not delete!
+          #print "   B5 atom", atomlist[opplist.index(max(opplist))]+1, "distance", max(opplist)
+          #print "   Highest atom", atomlist[adjlist.index(max(adjlist))]+1,"distance", max(adjlist),"\n   Lowest atom", atomlist[minadjlist.index(min(minadjlist))]+1,"distance", min(minadjlist)
 
-      B5=max(opplist)
-   #self.lval=max(adjlist)-minval
-   # A bit weird, but seems like original sterimol adds on the difference between the bond length and vdw radius of atom B. For a C-H bond this is 1.50 - 1.10 = 0.40 Angstrom)
-      self.lval=max(adjlist)+0.40
+          zcarts=[]#zeroed carts
+          for i in atomlist: zcarts.append(np.subtract(molcart[i],molcart[atomA]))
+          zvect=[0,0,1]
+          zcent=np.subtract(next_atom,molcart[atomA])
+          for cart in range(len(zcarts)):
+             zcoord= rotrel(zcent,zvect,zcarts[cart])
+             zcarts[cart]=zcoord
+          twodcarts=[]
+          for row in zcarts: 
+              twodcarts.append([row[0],row[1]])
+          fragrad=[]#radii of fragment atoms
+          for t in atomlist: 
+              fragrad.append(vdw_radii[t])
+          singledist=[]
+          for t in range(len(fragrad)):
+             d=np.linalg.norm(twodcarts[t])#;print d
+             d=d+fragrad[t]
+             singledist.append(d)
 
-      ###Useful - do not delete!
-      #print "   B5 atom", atomlist[opplist.index(max(opplist))]+1, "distance", max(opplist)
-      #print "   Highest atom", atomlist[adjlist.index(max(adjlist))]+1,"distance", max(adjlist),"\n   Lowest atom", atomlist[minadjlist.index(min(minadjlist))]+1,"distance", min(minadjlist)
+          self.newB5=max(singledist) #This is the same as the 3D calculated value from above
 
-      zcarts=[]#zeroed carts
-      for i in atomlist: zcarts.append(np.subtract(molcart[i],molcart[atomA]))
-      zvect=[0,0,1]
-      zcent=np.subtract(next_atom,molcart[atomA])
-      for cart in range(len(zcarts)):
-         zcoord= rotrel(zcent,zvect,zcarts[cart])
-         zcarts[cart]=zcoord
-      twodcarts=[]
-      for row in zcarts: twodcarts.append([row[0],row[1]])
-      fragrad=[]#radii of fragment atoms
-      for t in atomlist: fragrad.append(vdw_radii[t])
-      singledist=[]
-      for t in range(len(fragrad)):
-         d=np.linalg.norm(twodcarts[t])#;print d
-         d=d+fragrad[t]
-         singledist.append(d)
-      self.newB5=max(singledist) #This is the same as the 3D calculated value from above
-
-      center=[0,0]
-      vlist=[]#list of distances from the origin to the tangential vectors
-      alist=[]#list of atoms between which the tangential vectors pass through no other atoms
-      iav=[]#interatomic vectors
-      sym=symcheck(twodcarts)
-      for x in range(len(twodcarts)):
-         if sym==1:
-            twodcarts[x][0]=twodcarts[x][0]+0.000001
-            twodcarts[x][1]=twodcarts[x][1]+0.000001
-         for y in range(len(twodcarts)):
-            if x!=y:
-               try:nvect= (twod_vect(center,twodcarts[x],twodcarts[y]))#origin normal vector to connecting atomic centers vector
-               except ValueError:nvect=[0,0]
-               iav=np.subtract(twodcarts[x],twodcarts[y])#interatomic vector
-               iad=np.linalg.norm(iav)#interatomic distance
-               try:theta=math.asin((fragrad[y]-fragrad[x])/iad)#calculates angle by which to rotate vdw radii before adding
-               except ValueError: theta=np.pi/2
-               try:unvect=nvect/np.linalg.norm(nvect)
-               except RuntimeWarning:pass#unvect=[0,0]
-               xradv=twod_rot(unvect*fragrad[x],theta)
-               yradv=twod_rot(unvect*fragrad[y],theta)
-               mvect= (twod_vect(center,twodcarts[x]-xradv,twodcarts[y]-yradv))
-               nvect= (twod_vect(center,twodcarts[x]+xradv,twodcarts[y]+yradv))#origin normal vector to connecting atomic surfaces tangential vector
-               newx=twodcarts[x]+xradv
-               newy=twodcarts[y]+yradv
-               mewx=twodcarts[x]-xradv
-               mewy=twodcarts[y]-yradv
-               if np.cross(nvect,xradv)<0.000000001 and theta!=np.pi/2:
-                  satpoint=[]#Satisfied points not within range of tangential vector
-                  for z in range(len(twodcarts)):
-                     pvdist=twod_dist(twodcarts[z],newx,newy)
-                     if z!=x and z!=y and pvdist>(fragrad[z]-0.0001):satpoint.append(pvdist)
-                  if len(satpoint)==len(atomlist)-2:vlist.append(np.linalg.norm(nvect));alist.append([x,y]);#print x,y
-                  satpoint=[]
-                  for z in range(len(twodcarts)):
-                     pvdist=twod_dist(twodcarts[z],mewx,mewy)
-                     if z!=x and z!=y and pvdist>(fragrad[z]-0.0001):satpoint.append(pvdist)
-                  if len(satpoint)==len(atomlist)-2:vlist.append(np.linalg.norm(mvect));alist.append([x,y])
-      if linearcheck(twodcarts)==1:self.B1 = max(fragrad)
-      elif len(vlist) > 0: self.B1=min(vlist)
-      else: self.B1 = max(fragrad)
+          center=[0,0]
+          vlist=[]#list of distances from the origin to the tangential vectors
+          alist=[]#list of atoms between which the tangential vectors pass through no other atoms
+          iav=[]#interatomic vectors
+          sym=symcheck(twodcarts)
+          for x in range(len(twodcarts)):
+             if sym==1:
+                twodcarts[x][0]=twodcarts[x][0]+0.000001
+                twodcarts[x][1]=twodcarts[x][1]+0.000001
+             for y in range(len(twodcarts)):
+                if x!=y:
+                   try:
+                       nvect= (twod_vect(center,twodcarts[x],twodcarts[y]))#origin normal vector to connecting atomic centers vector
+                   except ValueError:
+                       nvect=[0,0]
+                   iav=np.subtract(twodcarts[x],twodcarts[y])#interatomic vector
+                   iad=np.linalg.norm(iav)#interatomic distance
+                   try:
+                       theta=math.asin((fragrad[y]-fragrad[x])/iad)#calculates angle by which to rotate vdw radii before adding
+                   except ValueError: 
+                       theta=np.pi/2
+                   try:
+                       unvect=nvect/np.linalg.norm(nvect)
+                   except RuntimeWarning:
+                       pass#unvect=[0,0]
+                   xradv=twod_rot(unvect*fragrad[x],theta)
+                   yradv=twod_rot(unvect*fragrad[y],theta)
+                   mvect= (twod_vect(center,twodcarts[x]-xradv,twodcarts[y]-yradv))
+                   nvect= (twod_vect(center,twodcarts[x]+xradv,twodcarts[y]+yradv))#origin normal vector to connecting atomic surfaces tangential vector
+                   newx=twodcarts[x]+xradv
+                   newy=twodcarts[y]+yradv
+                   mewx=twodcarts[x]-xradv
+                   mewy=twodcarts[y]-yradv
+                   if np.cross(nvect,xradv)<0.000000001 and theta!=np.pi/2:
+                      satpoint=[]#Satisfied points not within range of tangential vector
+                      for z in range(len(twodcarts)):
+                         pvdist=twod_dist(twodcarts[z],newx,newy)
+                         if z!=x and z!=y and pvdist>(fragrad[z]-0.0001):
+                             satpoint.append(pvdist)
+                      if len(satpoint)==len(atomlist)-2:
+                          vlist.append(np.linalg.norm(nvect))
+                          alist.append([x,y]);#print x,y
+                      satpoint=[]
+                      for z in range(len(twodcarts)):
+                         pvdist=twod_dist(twodcarts[z],mewx,mewy)
+                         if z!=x and z!=y and pvdist>(fragrad[z]-0.0001):
+                             satpoint.append(pvdist)
+                      if len(satpoint)==len(atomlist)-2:vlist.append(np.linalg.norm(mvect));alist.append([x,y])
+                      
+          if linearcheck(twodcarts)==1:
+              self.B1 = max(fragrad)
+          elif len(vlist) > 0: 
+              self.B1=min(vlist)
+          else: 
+              self.B1 = max(fragrad)
 
 def symcheck(carts):#Add symmetry criteria
    center=[0,0]
