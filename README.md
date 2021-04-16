@@ -9,12 +9,14 @@
 [![DOI](https://zenodo.org/badge/143098770.svg)](https://zenodo.org/badge/latestdoi/143098770)
 
 This code is no longer actively supported. We recommend using the updated [DBSTEP](https://github.com/bobbypaton/DBSTEP) as an alternative Python project to measure Sterimol parameters through the command line or with Python scripting. The current version of wSterimol currently depends on DBSTEP to obtain Sterimol parameters. 
-To install the DBSTEP package into PyMOL, enter the following lines into the PyMol console
+To install the DBSTEP package into PyMOL, enter the following lines into the PyMol console:
 
 ```
 import pip
 pip.main(['install', 'dbstep'])
 ```
+Note that there will likely be differences in results computed by DBSTEP compared to the previous wSterimol method, as DBSTEP uses van der Waals radii, as opposed to CPK radii. 
+The previous method to compute Sterimol parameters can be invoked by calling 'wSterimol' with the 'classic=True' argument in PyMOL. 
 
 wSterimol is an automated computational workflow which computes multidimensional [Sterimol](http://doi.org/10.1021/bk-1984-0255.ch016) parameters. For flexible molecules or substituents, the program will generate & optimize a conformational ensemble, and produce Boltzmann-weighted Sterimol parameters. It has been developed as a [PyMol](https://pymol.org/2) plugin.
 
