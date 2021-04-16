@@ -16,9 +16,9 @@ version = 1.05
 # Generate the wSterimol parameters from the optimised structures
 # Use in Pymol command prompt:
 # run wSterimol.py
-# wSterimol dihedrals, atomid1, atomid2, (radii, walltime, directory, setup_path, verbose)
+# wSterimol dihedrals, atomid1, atomid2, (radii, walltime, directory, setup_path, verbose, classic)
 
-def wSterimol(dihedrals, atomid1 = "id 1", atomid2 = "id 2", directory = "temp", setup_path = '.', walltime = 300,  verbose = "False"):
+def wSterimol(dihedrals, atomid1 = "id 1", atomid2 = "id 2", directory = "temp", setup_path = '.', walltime = 300,  verbose = "False", classic = "False"):
     # Log generation
     wlog = Log()
     # Do weighted Sterimol
@@ -27,7 +27,7 @@ def wSterimol(dihedrals, atomid1 = "id 1", atomid2 = "id 2", directory = "temp",
             if prepare_file(directory, setup_path, verbose):
                 if optimisation(directory, walltime, verbose, setup_path):
                     if filter_opt(directory, setup_path, verbose):
-                        if Sterimol(atomid1, atomid2, directory, setup_path, verbose):
+                        if Sterimol(atomid1, atomid2, directory, setup_path, verbose, classic):
                             if weight(setup_path, verbose):
                                 wlog.write("---- wSterimol finished ----\n")
                                 wlog.finalize()
