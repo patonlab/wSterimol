@@ -1,3 +1,24 @@
+> **Archived.** The workflow in this repository is now covered by two maintained packages:
+>
+> * conformer generation and optimisation: [AQME](https://github.com/jvalegre/aqme) (CREST, RDKit,
+>   xTB or QM engines), or any tool that writes an SDF with energies or one QM output per conformer;
+> * Boltzmann-weighted Sterimol parameters and visualisation: [DBSTEP](https://github.com/patonlab/DBSTEP)
+>   (`pip install dbstep`).
+>
+> | wSterimol | DBSTEP equivalent |
+> |---|---|
+> | `wSterimol [...], id 1, id 3` then `weighted.txt` | `dbstep pentane_*.out --sterimol --atom1 1 --atom2 3 --radii cpk --boltzmann --temperature 298` (energies read from the outputs; the example here gives wL 6.33, wB1 1.79, wB5 3.75 as before) |
+> | `ENERGYWINDOW_CUTOFF` | `--energy-window 3.0` |
+> | AQME/CREST ensembles | `dbstep conformers.sdf --sterimol --atom1 1 --atom2 3 --boltzmann` (energies from the SDF fields) |
+> | `sterimol id 1, id 3` in PyMOL | `dbstep_sterimol id 1, id 3` after `import dbstep.pymol_plugin` in PyMOL |
+> | `Add_VDW obj, cpk` | `dbstep_vdw obj, cpk` |
+> | `AddConformers temp` | `dbstep_conformers temp` or `dbstep_ensemble temp/*.out, 1, 3` (loads the conformers with their populations) |
+>
+> The PyMOL plugin also draws buried-volume spheres, residue contributions and Tolman cone angles.
+> As here, `--radii cpk` reproduces the original Sterimol radii; Bondi radii are the DBSTEP default.
+
+
+
 ```
                    ____ ______ ____ ___   ____ __  ___ ____   __           
           _    __ / __//_  __// __// _ \ /  _//  |/  // __ \ / /           
