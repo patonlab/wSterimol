@@ -22,7 +22,7 @@ from pymol import cmd
 # run sterimol.py
 # sterimol atomid1, atomid2, (directory, setup_path, verbose)
 
-def Sterimol(atomid1 = "id 1", atomid2 = "id 2", directory = "temp", setup_path = "default", verbose = "False"):
+def Sterimol(atomid1 = "id 1", atomid2 = "id 2", directory = "temp", setup_path = "default", verbose = "False", classic = "False"):
     # If the directory exists
     if os.path.exists(directory):
         # Log generation
@@ -33,6 +33,10 @@ def Sterimol(atomid1 = "id 1", atomid2 = "id 2", directory = "temp", setup_path 
             verbose = True
         else:
             verbose = False
+        if classic.lower() in ['true', '1', 't', 'y', 'yes']:
+            classic = True
+        else:
+            classic = False
         try:
             atomid1 = int(atomid1.strip().strip('id '))
             atomid2 = int(atomid2.strip().strip('id '))
@@ -63,9 +67,11 @@ def Sterimol(atomid1 = "id 1", atomid2 = "id 2", directory = "temp", setup_path 
                     filesplit = filename.split(".")
                     #prepare the job
                     try:
-                        file_Params = calcSterimol(join(directory, filename), setup.radii, atomid1, atomid2, verbose)
+                        file_Params = calcSterimol(join(directory, filename), setup.radii, atomid1, atomid2, verbose, classic)
                     except ValueError:
                         log.write("FATAL ERROR: An error occured in Sterimol calculation.\n\n%s\n\n" % ValueError)
+                        return False
+                    if file_Params.lval == None and file_Params.B1 == None and file_Params.newB5 == None:
                         return False
                     lval = file_Params.lval; B1 = file_Params.B1; B5 = file_Params.newB5
                     message = " %-31s " % filename+" %8.2f" % lval+ " %8.2f" % B1+ " %8.2f" % B5
